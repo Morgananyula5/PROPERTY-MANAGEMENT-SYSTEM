@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard | Property Hub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&family=Victor+Mono:wght@300;500&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #1DA1F2, #007BCE);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(4px);
+      text-align: center;
+      width: 550px;
+      box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-family: 'Victor Mono', monospace;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.02);
+    }
+
+    select {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    select option {
+      background: #1DA1F2;
+      color: white;
+    }
+
+    .btn {
+      background: white;
+      color: #1DA1F2;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #ebebeb;
+      transform: scale(1.05);
+    }
+
+    .copy-icon {
+      cursor: pointer;
+      font-size: 16px;
+      margin-left: 8px;
+      opacity: 0.7;
+      transition: 0.3s ease;
+    }
+
+    .copy-icon:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .features-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .add-btn {
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+      background: none;
+      border: none;
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    .add-btn:hover {
+      color: lightgray;
+      transform: scale(1.1);
+    }
+
+    .profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      display: block;
+      margin: 0 auto 15px;
+    }
+  </style>
+
+  <script>
+    function copyText(id) {
+      var copyText = document.getElementById(id);
+      navigator.clipboard.writeText(copyText.value);
+      alert("Copied: " + copyText.value);
+    }
+
+    function addFeature() {
+      const container = document.getElementById("features-container");
+      const div = document.createElement("div");
+      div.classList.add("feature-item");
+      div.innerHTML = `
+        <input type="text" name="features[]" placeholder="Feature" required>
+        <input type="number" name="prices[]" placeholder="Price" required>
+      `;
+      container.appendChild(div);
+    }
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Manager Dashboard</h1>
+
+    <!-- Profile Picture Preview -->
+    <img src="default-profile.png" alt="Profile Picture" class="profile-picture">
+
+    <!-- Profile Picture Upload -->
+    <input type="file" name="profile_picture" accept="image/*" required>
+
+    <form action="/add_property" method="post" enctype="multipart/form-data">
+      <input type="text" name="name" placeholder="Property Name" required>
+
+      <select name="type" required>
+        <option value="" disabled selected>Property Type</option>
+        <option value="Apartment">Apartment</option>
+        <option value="House">House</option>
+        <option value="Office Space">Office Space</option>
+        <option value="Commercial Property">Commercial Property</option>
+        <option value="Land">Land</option>
+      </select>
+
+      <label>Property Features & Pricing:</label>
+      <div class="features-container" id="features-container">
+        <div class="feature-item">
+          <input type="text" name="features[]" placeholder="Feature" required>
+          <input type="number" name="prices[]" placeholder="Price" required>
+        </div>
+      </div>
+      <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+
+      <select name="status" required>
+        <option value="" disabled selected>Property Status</option>
+        <option value="Available">Available</option>
+        <option value="Rented">Rented</option>
+        <option value="Sold">Sold</option>
+        <option value="Pending">Pending</option>
+        <option value="Under Maintenance">Under Maintenance</option>
+      </select>
+
+      <input type="tel" name="phone" id="phone" placeholder="Contact Phone" required>
+      <span class="copy-icon" onclick="copyText('phone')">📋</span>
+
+      <input type="email" name="email" id="email" placeholder="Manager Email" required>
+      <span class="copy-icon" onclick="copyText('email')">📋</span>
+
+      <textarea name="description" placeholder="Property Description" required></textarea>
+
+      <input type="text" name="location" placeholder="City/Town" required>
+      <input type="text" name="sub_county" placeholder="Sub-county" required>
+      <input type="text" name="landmarks" placeholder="Nearby Landmarks" required>
+
+      <!-- Removed Available From -->
+
+      <label>Availability:</label>
+      <select name="availability" required>
+        <option value="9-5">9-5</option>
+        <option value="Full-Time">Full-Time</option>
+        <option value="Part-Time">Part-Time</option>
+      </select>
+
+      <button class="btn" type="submit">Add Property</button>
+    </form>
+  </div>
+
+</body>
+</html>

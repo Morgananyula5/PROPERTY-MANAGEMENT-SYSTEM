@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Property</title>
+    <style>
+        body {
+            background-color: #0d0d30;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        form {
+            background-color: #1e1e40;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        input, select, button {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: #7289DA;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Property</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="name" value="{{ property.name }}" placeholder="Property Name" required><br>
+        <input type="text" name="location" value="{{ property.location }}" placeholder="Location" required><br>
+        <input type="text" name="sub_county" value="{{ property.sub_county }}" placeholder="Sub County" required><br>
+        <select name="property_type" required>
+            <option value="{{ property.property_type }}">{{ property.property_type }}</option>
+            <option value="Rent">Rent</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Fully Buying">Fully Buying</option>
+        </select><br>
+        <select name="status" required>
+            <option value="{{ property.status }}">{{ property.status }}</option>
+            <option value="Occupied">Occupied</option>
+            <option value="Vacant">Vacant</option>
+            <option value="Under Maintenance">Under Maintenance</option>
+        </select><br>
+        <input type="text" name="price" value="{{ property.price }}" placeholder="Price" required><br>
+        <input type="file" name="image"><br>
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>
