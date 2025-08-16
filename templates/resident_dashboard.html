@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Arial&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1DA1F2; /* Twitter Blue Background */
+            color: #FFFFFF;
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+            text-align: center;
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 1.2em; /* Enlarged from 1.1em */
+        }
+
+        h1 {
+            font-size: 3em; /* Enlarged from 2.8em */
+            margin-bottom: 20px;
+            color: #FFFFFF; /* White for contrast on Twitter Blue */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-in;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .property-card {
+            background-color: #007BCE; /* Darker Twitter Blue for contrast */
+            border-radius: 12px;
+            padding: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.6); /* Twitter Blue glow */
+        }
+
+        .property-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #4AB3F4; /* Lighter Twitter Blue */
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover .property-image {
+            transform: scale(1.03);
+        }
+
+        .media-gallery {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .media-item {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Hidden by default for slideshow */
+            border-radius: 8px;
+        }
+
+        .media-item.active {
+            display: block;
+        }
+
+        .media-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .media-nav-btn {
+            background: rgba(29, 161, 242, 0.8); /* Twitter Blue */
+            color: #FFFFFF;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 22px; /* Enlarged from 20px */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .media-nav-btn:hover {
+            background: #4AB3F4; /* Lighter Twitter Blue */
+            transform: scale(1.1);
+        }
+
+        .property-info {
+            padding: 10px;
+            font-size: 1.1em; /* Enlarged from 1em */
+            color: #E1E8ED;
+        }
+
+        .property-info h3 {
+            font-size: 1.8em; /* Enlarged from 1.6em */
+            color: #FFFFFF;
+            margin-bottom: 8px;
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+        }
+
+        .property-info p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        .property-info p strong {
+            font-weight: 700; /* Very bold for headings */
+        }
+
+        .property-info ul {
+            list-style: none;
+            margin: 8px 0;
+            padding-left: 10px;
+        }
+
+        .property-info li {
+            margin: 5px 0;
+            font-size: 1em; /* Enlarged from 0.95em */
+            color: #FFFFFF;
+        }
+
+        .input-with-copy {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px 0;
+        }
+
+        .copy-icon {
+            cursor: pointer;
+            font-size: 1.2em; /* Enlarged from 1.1em */
+            color: #4AB3F4; /* Lighter Twitter Blue */
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .copy-icon:hover {
+            color: #FFFFFF;
+            transform: scale(1.1);
+        }
+
+        .logout-container {
+            text-align: right;
+            margin: 20px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #1DA1F2, #4AB3F4); /* Twitter Blue gradient */
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+            font-size: 1.2em; /* Enlarged from 1.1em */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(29, 161, 242, 0.6);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .property-card {
+                width: 100%;
+            }
+            .property-image {
+                height: 160px;
+            }
+            .media-gallery {
+                height: 120px;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize slideshow for each property card
+            document.querySelectorAll('.media-gallery').forEach(gallery => {
+                const mediaItems = gallery.querySelectorAll('.media-item');
+                const prevBtn = gallery.querySelector('.media-nav-btn.prev');
+                const nextBtn = gallery.querySelector('.media-nav-btn.next');
+                let currentIndex = 0;
+
+                if (mediaItems.length > 0) {
+                    mediaItems[0].classList.add('active');
+
+                    // Auto-advance slideshow every 5 seconds
+                    let autoSlide = setInterval(() => {
+                        showMedia(currentIndex + 1, mediaItems);
+                    }, 5000);
+
+                    // Previous button
+                    prevBtn.addEventListener('click', () => {
+                        clearInterval(autoSlide);
+                        showMedia(currentIndex - 1, mediaItems);
+                        autoSlide = setInterval(() => {
+                            showMedia(currentIndex + 1, mediaItems);
+                        }, 5000);
+                    });
+
+                    // Next button
+                    nextBtn.addEventListener('click', () => {
+                        clearInterval(autoSlide);
+                        showMedia(currentIndex + 1, mediaItems);
+                        autoSlide = setInterval(() => {
+                            showMedia(currentIndex + 1, mediaItems);
+                        }, 5000);
+                    });
+
+                    function showMedia(index, items) {
+                        items[currentIndex].classList.remove('active');
+                        currentIndex = (index + items.length) % items.length;
+                        items[currentIndex].classList.add('active');
+                    }
+                }
+            });
+
+            // Copy functionality for phone and email
+            document.querySelectorAll('.copy-icon').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const text = icon.getAttribute('data-copy');
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert(`Copied: ${text}`);
+                    }).catch(err => {
+                        console.error('Failed to copy:', err);
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="logout-container">
+        <button class="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+    <h1>Available Properties</h1>
+    {% if properties %}
+    <div class="grid-container">
+        {% for property in properties %}
+        <div class="property-card">
+            <img src="{{ property.profile_picture | default('/static/default.jpg') }}" alt="Profile Picture" class="property-image">
+            <div class="property-info">
+                <h3>{{ property.name | default('Unnamed Property') }}</h3>
+                <p><strong>Type:</strong> {{ property.type | default('') }}</p>
+                <p><strong>Features:</strong></p>
+                <ul>
+                    {% for item in property.features %}
+                        <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }})</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Address:</strong> {{ property.location_address | default('') }}<br>{{ property.property_address | default('') }}</p>
+                <p><strong>Amenities:</strong> {{ property.amenities | default('') }}</p>
+                <div class="input-with-copy">
+                    <p><strong>Phone:</strong> {{ property.phone | default('') }}</p>
+                    <span class="copy-icon" data-copy="{{ property.phone | default('') }}">📋</span>
+                </div>
+                <div class="input-with-copy">
+                    <p><strong>Email:</strong> {{ property.email | default('') }}</p>
+                    <span class="copy-icon" data-copy="{{ property.email | default('') }}">📋</span>
+                </div>
+                <p><strong>Description:</strong> {{ property.description | default('') }}</p>
+                <p><strong>Location:</strong> {{ property.location | default('') }}</p>
+                <p><strong>Sub-county:</strong> {{ property.sub_county | default('') }}</p>
+                <p><strong>Landmarks:</strong> {{ property.landmarks | default('') }}</p>
+                <p><strong>Availability:</strong> {{ property.availability | default('') }}</p>
+                <p><strong>Status:</strong> {{ property.status | default('') }}</p>
+                {% if property.media %}
+                <p><strong>Media:</strong></p>
+                <div class="media-gallery">
+                    {% for media in property.media %}
+                        {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
+                            <video class="media-item" controls>
+                                <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% else %}
+                            <img src="{{ media }}" alt="Property Media" class="media-item">
+                        {% endif %}
+                    {% endfor %}
+                    <div class="media-nav">
+                        <button class="media-nav-btn prev">❮</button>
+                        <button class="media-nav-btn next">❯</button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No properties available at the moment.</p>
+    {% endif %}
+</body>
+</html>

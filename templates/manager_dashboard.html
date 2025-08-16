@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard | Property Hub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&family=Victor+Mono:wght@300;500&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #1DA1F2, #007BCE);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(4px);
+      text-align: center;
+      width: 850px;
+      box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-family: 'Victor Mono', monospace;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 40px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.02);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: white;
+      font-weight: bold;
+      opacity: 1;
+    }
+
+    .file-input-container {
+      position: relative;
+      width: 100%;
+      margin: 40px 0;
+    }
+
+    .file-input-container input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin: 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    .file-input-container.profile-picture-container::before {
+      content: "Profile Picture";
+      position: absolute;
+      top: -20px;
+      left: 0;
+      font-weight: bold;
+      color: white;
+      opacity: 1;
+      font-size: 16px;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .file-input-container.media-container::before {
+      content: "Property Photos & Videos";
+      position: absolute;
+      top: -20px;
+      left: 0;
+      font-weight: bold;
+      color: white;
+      opacity: 1;
+      font-size: 16px;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .input-with-copy {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 40px 0;
+    }
+
+    .input-with-copy input {
+      margin: 0;
+    }
+
+    .feature-item input[name="features[]"] {
+      flex: 3;
+      min-width: 300px;
+    }
+
+    .feature-item input[name="prices[]"] {
+      min-width: 150px;
+    }
+
+    .feature-item select[name="status[]"] {
+      min-width: 200px;
+    }
+
+    select {
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 40px;
+    }
+
+    select option {
+      background: #1DA1F2;
+      color: white;
+    }
+
+    .btn {
+      background: white;
+      color: #1DA1F2;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #ebebeb;
+      transform: scale(1.05);
+    }
+
+    .copy-icon {
+      cursor: pointer;
+      font-size: 16px;
+      opacity: 0.7;
+      transition: 0.3s ease;
+      position: relative;
+    }
+
+    .copy-icon:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .features-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .add-btn, .remove-btn {
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+      background: none;
+      border: none;
+      color: white;
+      transition: 0.3s ease;
+      padding: 12px;
+    }
+
+    .add-btn:hover, .remove-btn:hover {
+      color: lightgray;
+      transform: scale(1.1);
+    }
+
+    .profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    label {
+      font-weight: bold;
+      color: white;
+      opacity: 1;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .label-closer {
+      margin-bottom: 5px;
+    }
+
+    .property-details {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .property-details h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .property-details p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .media-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .media-item {
+      max-width: 200px;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .edit-btn, .add-new-btn, .logout-btn {
+      background: #1DA1F2;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
+
+    .edit-btn:hover, .add-new-btn:hover, .logout-btn:hover {
+      background: #007BCE;
+      transform: scale(1.05);
+    }
+
+    .logout-container {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+  </style>
+
+  <script>
+    function copyText(id) {
+      var copyText = document.getElementById(id);
+      navigator.clipboard.writeText(copyText.value);
+      alert("Copied: " + copyText.value);
+    }
+
+    function addFeature() {
+      const container = document.getElementById("features-container");
+      // Remove add-btn from all existing feature items
+      document.querySelectorAll('.add-btn').forEach(btn => btn.remove());
+      const div = document.createElement("div");
+      div.classList.add("feature-item");
+      div.innerHTML = `
+        <input type="text" name="features[]" placeholder="Feature ( e.g. One Bedroom)" required>
+        <input type="number" name="prices[]" placeholder="Price (Ksh)" required>
+        <select name="status[]" required>
+          <option value="" disabled selected>Property Status</option>
+          <option value="Available">Available</option>
+          <option value="Rented">Rented</option>
+          <option value="Sold">Sold</option>
+          <option value="Pending">Pending</option>
+          <option value="Under Maintenance">Under Maintenance</option>
+        </select>
+        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">➖</button>
+        <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+      `;
+      container.appendChild(div);
+    }
+
+    // Preview profile picture
+    document.addEventListener('DOMContentLoaded', function() {
+      const profilePictureInput = document.getElementById('profile_picture_input');
+      const profilePicturePreview = document.querySelector('.profile-picture');
+
+      if (profilePictureInput) {
+        profilePictureInput.addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              profilePicturePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logout-container">
+      <button class="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+    <h1>Manager Dashboard</h1>
+
+    {% if property and not edit_mode %}
+      <!-- Display saved property details -->
+      <img src="{{ profile_picture }}" alt="Profile Picture" class="profile-picture">
+      <div class="property-details">
+        <h2>{{ property.name }}</h2>
+        <p><strong>Type:</strong> {{ property.type }}</p>
+        <p><strong>Status:</strong> {{ property.status }}</p>
+        <p><strong>Description:</strong> {{ property.description }}</p>
+        <p><strong>Location:</strong> {{ property.location }}</p>
+        <p><strong>Sub-county:</strong> {{ property.sub_county }}</p>
+        <p><strong>Landmarks:</strong> {{ property.landmarks }}</p>
+        <p><strong>Location Address:</strong> {{ property.location_address }}</p>
+        <p><strong>Property Address:</strong> {{ property.property_address }}</p>
+        <p><strong>Amenities:</strong> {{ property.amenities }}</p>
+        <p><strong>Phone:</strong> {{ property.phone }}</p>
+        <p><strong>Email:</strong> {{ property.email }}</p>
+        <p><strong>Availability:</strong> {{ property.availability }}</p>
+        <p><strong>Features:</strong></p>
+        <ul>
+          {% for item in property.features %}
+            <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }})</li>
+          {% endfor %}
+        </ul>
+        {% if property.media %}
+          <p><strong>Media:</strong></p>
+          <div class="media-gallery">
+            {% for media in property.media %}
+              {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
+                <video class="media-item" controls>
+                  <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
+                  Your browser does not support the video tag.
+                </video>
+              {% else %}
+                <img src="{{ media }}" alt="Property Media" class="media-item">
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+        <button class="edit-btn" onclick="window.location.href='/edit_property/{{ property.id }}'">Edit Property Details</button>
+        <button class="add-new-btn" onclick="window.location.href='/manager_dashboard'">Add New Property</button>
+      </div>
+    {% else %}
+      <!-- Profile Picture Preview -->
+      <img src="{{ profile_picture | default('default-profile.png') }}" alt="Profile Picture" class="profile-picture">
+
+      <form action="{{ '/edit_property/' + property.id|string if edit_mode else '/add_property' }}" method="post" enctype="multipart/form-data">
+        <!-- Profile Picture Upload -->
+        <div class="file-input-container profile-picture-container">
+          <input type="file" id="profile_picture_input" name="profile_picture" accept="image/*">
+        </div>
+
+        <input type="text" name="name" placeholder="Property Name" value="{{ property.name if edit_mode else '' }}" required>
+
+        <select name="type" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Property Type</option>
+          <option value="Apartment" {% if edit_mode and property.type == 'Apartment' %}selected{% endif %}>Apartment</option>
+          <option value="House" {% if edit_mode and property.type == 'House' %}selected{% endif %}>House</option>
+          <option value="Office Space" {% if edit_mode and property.type == 'Office Space' %}selected{% endif %}>Office Space</option>
+          <option value="Commercial Property" {% if edit_mode and property.type == 'Commercial Property' %}selected{% endif %}>Commercial Property</option>
+          <option value="Land" {% if edit_mode and property.type == 'Land' %}selected{% endif %}>Land</option>
+        </select>
+
+        <select name="status" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Overall Property Status</option>
+          <option value="Available" {% if edit_mode and property.status == 'Available' %}selected{% endif %}>Available</option>
+          <option value="Rented" {% if edit_mode and property.status == 'Rented' %}selected{% endif %}>Rented</option>
+          <option value="Sold" {% if edit_mode and property.status == 'Sold' %}selected{% endif %}>Sold</option>
+          <option value="Pending" {% if edit_mode and property.status == 'Pending' %}selected{% endif %}>Pending</option>
+          <option value="Under Maintenance" {% if edit_mode and property.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+        </select>
+
+        <label class="label-closer">Property Features & Pricing:</label>
+        <div class="features-container" id="features-container">
+          {% if edit_mode and property.features %}
+            {% for item in property.features %}
+              <div class="feature-item">
+                <input type="text" name="features[]" placeholder="Feature ( e.g. One Bedroom)" value="{{ item.feature }}" required>
+                <input type="number" name="prices[]" placeholder="Price (Ksh)" value="{{ item.price }}" required>
+                <select name="status[]" required>
+                  <option value="" disabled>Property Status</option>
+                  <option value="Available" {% if item.status == 'Available' %}selected{% endif %}>Available</option>
+                  <option value="Rented" {% if item.status == 'Rented' %}selected{% endif %}>Rented</option>
+                  <option value="Sold" {% if item.status == 'Sold' %}selected{% endif %}>Sold</option>
+                  <option value="Pending" {% if item.status == 'Pending' %}selected{% endif %}>Pending</option>
+                  <option value="Under Maintenance" {% if item.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+                </select>
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">➖</button>
+                <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="feature-item">
+              <input type="text" name="features[]" placeholder="Feature ( e.g. One Bedroom)" required>
+              <input type="number" name="prices[]" placeholder="Price (Ksh)" required>
+              <select name="status[]" required>
+                <option value="" disabled selected>Property Status</option>
+                <option value="Available">Available</option>
+                <option value="Rented">Rented</option>
+                <option value="Sold">Sold</option>
+                <option value="Pending">Pending</option>
+                <option value="Under Maintenance">Under Maintenance</option>
+              </select>
+              <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+            </div>
+          {% endif %}
+        </div>
+
+        <input type="text" name="location_address" placeholder="Property Location" value="{{ property.location_address if edit_mode else '' }}" required>
+        <input type="text" name="property_address" placeholder="Property Address" value="{{ property.property_address if edit_mode else '' }}" required>
+
+        <div class="file-input-container media-container">
+          <input type="file" name="media[]" accept="image/*,video/*" multiple>
+        </div>
+
+        <input type="text" name="amenities" placeholder="Property Amenities (e.g., gym, pool, laundry, parking, bike storage)" value="{{ property.amenities if edit_mode else '' }}" required>
+
+        <div class="input-with-copy">
+          <input type="text" name="phone" id="phone" placeholder="Property Manager Contact" value="{{ property.phone if edit_mode else '' }}" required>
+          <span class="copy-icon" title="Copy" onclick="copyText('phone')">📋</span>
+        </div>
+
+        <div class="input-with-copy">
+          <input type="email" name="email" id="email" placeholder="Property Manager Email" value="{{ property.email if edit_mode else '' }}" required>
+          <span class="copy-icon" title="Copy" onclick="copyText('email')">📋</span>
+        </div>
+
+        <textarea name="description" placeholder="Property Description" required>{{ property.description if edit_mode else '' }}</textarea>
+
+        <select name="location" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>City/Town</option>
+          <option value="Nairobi" {% if edit_mode and property.location == 'Nairobi' %}selected{% endif %}>Nairobi</option>
+          <option value="Kiambu" {% if edit_mode and property.location == 'Kiambu' %}selected{% endif %}>Kiambu</option>
+          <option value="Kajiado" {% if edit_mode and property.location == 'Kajiado' %}selected{% endif %}>Kajiado</option>
+        </select>
+        <input type="text" name="sub_county" placeholder="Sub-county" value="{{ property.sub_county if edit_mode else '' }}" required>
+        <input type="text" name="landmarks" placeholder="Nearby Landmarks" value="{{ property.landmarks if edit_mode else '' }}" required>
+
+        <!-- Removed Available From -->
+
+        <label class="label-closer">Availability:</label>
+        <select name="availability" required>
+          <option value="9-5" {% if edit_mode and property.availability == '9-5' %}selected{% endif %}>9-5</option>
+          <option value="Full-Time" {% if edit_mode and property.availability == 'Full-Time' %}selected{% endif %}>Full-Time</option>
+          <option value="Part-Time" {% if edit_mode and property.availability == 'Part-Time' %}selected{% endif %}>Part-Time</option>
+        </select>
+
+        <button class="btn" type="submit">{{ 'Update Property' if edit_mode else 'Add Property' }}</button>
+      </form>
+    {% endif %}
+  </div>
+
+</body>
+</html>

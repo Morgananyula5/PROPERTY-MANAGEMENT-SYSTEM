@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Properties</title>
+</head>
+<body>
+    <h1>All Properties</h1>
+    <a href="/">Back to Home</a>
+    <ul>
+        {% for property in properties %}
+            <li>
+                <strong>{{ property.name }}</strong> - {{ property.location }}<br>
+                Description: {{ property.description }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
