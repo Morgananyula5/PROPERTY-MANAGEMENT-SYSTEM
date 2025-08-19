@@ -426,5 +426,72 @@ def edit_property(property_id):
 
     return render_template('manager_dashboard.html', profile_picture=profile_picture, property=property_data, edit_mode=True)
 
+# Route to Add Media
+@app.route('/add_media/<int:property_id>', methods=['POST'])
+def add_media(property_id):
+    if 'user_id' not in session or session.get('role') != 'Manager':
+        flash("Unauthorized access.", "danger")
+        return redirect(url_for('login'))
+
+    property = Property.query.get_or_404(property_id)
+
+    # Ensure the property belongs to the logged-in manager
+    if property.manager_id != session['user_id']:
+        flash("You are not authorized to add media to this property.", "danger")
+        return redirect(url_for('manager_dashboard'))
+
+    # Extract existing data from description
+    description_lines = property.description.split('\n')
+    main_description = description_lines[0]
+    location_address = next((line.split(': ')[1] for line in description_lines if line.startswith('Location Address: ')), '')
+    property_address = next((line.split(': ')[1] for line in description_lines if line.startswith('Property Address: ')), '')
+    amenities = next((line.split(': ')[1] for line in description_lines if line.startswith('Amenities: ')), '')
+    profile_picture_path = next((line.split(': ')[1] for line in description_lines if line.startswith('Profile Picture: ')), None)
+    existing_media = []
+    for line in description_lines:
+        if line.startswith('Media: '):
+            existing_media = line.split(': ')[1].split(', ') if line.split(': ')[1] else []
+
+    # Handle new media files upload
+    media_files = request.files.getlist('media[]')
+    new_media_paths = []
+    if media_files and any(media.filename for media in media_files):
+        try:
+            for media in media_files:
+                if media and media.filename:
+                    filename = secure_filename(media.filename)
+                    media_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    media.save(media_path)
+                    new_media_paths.append(f"uploads/{filename}")
+            flash(f"New media files added: {', '.join(new_media_paths)}", "info")
+        except Exception as e:
+            flash(f"Error saving media files: {str(e)}", "danger")
+            return redirect(url_for('manager_dashboard'))
+    else:
+        flash("No media files selected.", "warning")
+        return redirect(url_for('manager_dashboard'))
+
+    # Combine existing and new media
+    all_media = existing_media + new_media_paths
+
+    # Reconstruct description with updated media
+    combined_description = f"{main_description}\nLocation Address: {location_address}\nProperty Address: {property_address}\nAmenities: {amenities}"
+    if profile_picture_path:
+        combined_description += f"\nProfile Picture: {profile_picture_path}"
+    if all_media:
+        combined_description += f"\nMedia: {', '.join(all_media)}"
+
+    # Update property description
+    property.description = combined_description
+
+    try:
+        db.session.commit()
+        flash("Media added successfully!", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error adding media: {str(e)}", "danger")
+
+    return redirect(url_for('manager_dashboard'))
+
 if __name__ == '__main__':
     app.run(debug=True)

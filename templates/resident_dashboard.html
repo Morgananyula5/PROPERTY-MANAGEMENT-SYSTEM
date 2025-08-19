@@ -58,10 +58,12 @@
         .property-image {
             width: 100%;
             height: 180px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 10px;
             border: 2px solid #4AB3F4; /* Lighter Twitter Blue */
             transition: transform 0.3s ease;
+            cursor: pointer;
+            background: #FFFFFF;
         }
 
         .property-card:hover .property-image {
@@ -71,25 +73,28 @@
         .media-gallery {
             position: relative;
             width: 100%;
-            height: 150px;
+            height: 200px;
             margin-top: 10px;
             overflow: hidden;
             border-radius: 8px;
+            border: 2px solid #4AB3F4;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .media-item {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: none; /* Hidden by default for slideshow */
             border-radius: 8px;
+            cursor: pointer;
         }
 
         .media-item.active {
             display: block;
         }
 
-        .media-nav {
+        .slideshow-nav {
             position: absolute;
             top: 50%;
             width: 100%;
@@ -98,13 +103,13 @@
             transform: translateY(-50%);
         }
 
-        .media-nav-btn {
-            background: rgba(29, 161, 242, 0.8); /* Twitter Blue */
+        .slideshow-nav .prev, .slideshow-nav .next {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
             color: #FFFFFF;
             border: none;
             padding: 8px;
             cursor: pointer;
-            font-size: 22px; /* Enlarged from 20px */
+            font-size: 22px;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -112,11 +117,136 @@
             align-items: center;
             justify-content: center;
             transition: background 0.3s ease, transform 0.3s ease;
+            opacity: 0.8;
         }
 
-        .media-nav-btn:hover {
-            background: #4AB3F4; /* Lighter Twitter Blue */
+        .slideshow-nav .prev:hover, .slideshow-nav .next:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
             transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .dots-container {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 10px;
+            width: 10px;
+            margin: 0 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .dot.active, .dot:hover {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            transform: scale(1.1);
+        }
+
+        .fullscreen-media-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+        }
+
+        .fullscreen-media-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            height: 90vh;
+            max-width: 1200px;
+            max-height: 800px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .fullscreen-media-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fullscreen-media-content img, .fullscreen-media-content video {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .fullscreen-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .fullscreen-nav .prev, .fullscreen-nav .next {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .fullscreen-nav .prev:hover, .fullscreen-nav .next:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .close-fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .close-fullscreen-btn:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+            transform: scale(1.1);
+            opacity: 1;
         }
 
         .property-info {
@@ -172,27 +302,351 @@
             transform: scale(1.1);
         }
 
-        .logout-container {
-            text-align: right;
-            margin: 20px;
+        .action-buttons-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
         }
 
-        .logout-btn {
-            background: linear-gradient(135deg, #1DA1F2, #4AB3F4); /* Twitter Blue gradient */
+        .button-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .button-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .inbox-btn, .notification-btn, .logout-btn {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
             color: #FFFFFF;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             border: none;
-            font-family: 'Source Sans Pro', Arial, sans-serif;
-            font-size: 1.2em; /* Enlarged from 1.1em */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(29, 161, 242, 0.6);
+        .inbox-btn:hover, .notification-btn:hover, .logout-btn:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 10px 0;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            padding: 10px 16px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            border: 1px solid #4AB3F4;
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+            font-size: 1em;
+            min-width: 140px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(29, 161, 242, 0.8);
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 6px rgba(29, 161, 242, 0.4);
+        }
+
+        .action-btn:nth-child(1) {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+        }
+
+        .action-btn:nth-child(1):hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+        }
+
+        .action-btn:nth-child(2) {
+            background: linear-gradient(135deg, #1A91DA, #5AAFE6);
+        }
+
+        .action-btn:nth-child(2):hover {
+            background: linear-gradient(135deg, #4AAAD4, #74C4F5);
+        }
+
+        .action-btn:nth-child(3) {
+            background: linear-gradient(135deg, #1684C2, #4E9FD2);
+        }
+
+        .action-btn:nth-child(3):hover {
+            background: linear-gradient(135deg, #3A9BCF, #68B4E3);
+        }
+
+        .action-btn:nth-child(4) {
+            background: linear-gradient(135deg, #1377AA, #4290C9);
+        }
+
+        .action-btn:nth-child(4):hover {
+            background: linear-gradient(135deg, #358CC3, #5CA5D8);
+        }
+
+        .action-btn:nth-child(5) {
+            background: linear-gradient(135deg, #106A93, #3780B3);
+        }
+
+        .action-btn:nth-child(5):hover {
+            background: linear-gradient(135deg, #317FB7, #5095C7);
+        }
+
+        .action-btn:nth-child(6) {
+            background: linear-gradient(135deg, #0D5D7B, #2C709D);
+        }
+
+        .action-btn:nth-child(6):hover {
+            background: linear-gradient(135deg, #2B729F, #4685AB);
+        }
+
+        .action-btn::before {
+            content: '';
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 1em;
+        }
+
+        .action-btn[data-action="message"]::before {
+            content: '✉️';
+        }
+
+        .action-btn[data-action="book"]::before {
+            content: '📅';
+        }
+
+        .action-btn[data-action="call"]::before {
+            content: '📞';
+        }
+
+        .action-btn[data-action="rate"]::before {
+            content: '⭐';
+        }
+
+        .action-btn[data-action="view-ratings"]::before {
+            content: '📊';
+        }
+
+        .action-btn[data-action="view-location"]::before {
+            content: '📍';
+        }
+
+        /* Chat Modal Styles */
+        .chat-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .chat-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            height: 90vh;
+            max-height: 95vh;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .chat-header h2 {
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        .chat-close-btn {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #F5F8FA;
+            color: #14171A;
+        }
+
+        .chat-message {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .chat-message.sent {
+            background: #1DA1F2;
+            color: #FFFFFF;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-message.received {
+            background: #E1E8ED;
+            color: #14171A;
+            margin-right: auto;
+        }
+
+        .chat-message-timestamp {
+            font-size: 0.7em;
+            color: #657786;
+            margin-top: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #FFFFFF;
+            border-top: 1px solid #E1E8ED;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #4AB3F4;
+            border-radius: 20px;
+            font-size: 0.9em;
+            resize: none;
+            height: 40px;
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #1DA1F2;
+            box-shadow: 0 0 5px rgba(29, 161, 242, 0.5);
+        }
+
+        .chat-send-btn, .chat-upload-image-btn, .chat-upload-video-btn, .chat-emoji-btn {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send-btn:hover, .chat-upload-image-btn:hover, .chat-upload-video-btn:hover, .chat-emoji-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+        }
+
+        .chat-send-btn:active, .chat-upload-image-btn:active, .chat-upload-video-btn:active, .chat-emoji-btn:active {
+            transform: scale(0.95);
+        }
+
+        .chat-send-btn::before {
+            content: '✉️';
+        }
+
+        .chat-upload-image-btn::before {
+            content: '📷';
+        }
+
+        .chat-upload-video-btn::before {
+            content: '🎥';
+        }
+
+        .chat-emoji-btn::before {
+            content: '😊';
+        }
+
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 60px;
+            right: 10px;
+            background: #FFFFFF;
+            border: 1px solid #4AB3F4;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .emoji-picker button {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .emoji-picker button:hover {
+            transform: scale(1.2);
         }
 
         /* Animations */
@@ -204,6 +658,11 @@
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translate(-50%, -60%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
         }
 
         /* Responsive Design */
@@ -218,52 +677,268 @@
                 height: 160px;
             }
             .media-gallery {
-                height: 120px;
+                height: 150px;
+            }
+            .slideshow-nav .prev, .slideshow-nav .next {
+                width: 24px;
+                height: 24px;
+                font-size: 18px;
+            }
+            .dot {
+                height: 8px;
+                width: 8px;
+                margin: 0 3px;
+            }
+            .fullscreen-media-modal {
+                width: 95vw;
+                height: 95vh;
+            }
+            .fullscreen-nav .prev, .fullscreen-nav .next {
+                width: 32px;
+                height: 32px;
+                font-size: 20px;
+            }
+            .close-fullscreen-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
+            .action-btn {
+                min-width: 100px;
+                font-size: 0.85em;
+                padding: 8px 12px;
+            }
+            .chat-modal {
+                width: 95%;
+                height: 95vh;
+                max-height: 98vh;
+            }
+            .chat-input {
+                font-size: 0.8em;
+                height: 35px;
+            }
+            .chat-send-btn, .chat-upload-image-btn, .chat-upload-video-btn, .chat-emoji-btn {
+                width: 32px;
+                height: 32px;
+            }
+            .inbox-btn, .notification-btn, .logout-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+            .button-label {
+                font-size: 0.7rem;
             }
         }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Full-screen media modal elements
+            const fullscreenModal = document.createElement('div');
+            fullscreenModal.classList.add('fullscreen-media-modal');
+            fullscreenModal.innerHTML = `
+                <div class="fullscreen-media-content"></div>
+                <div class="fullscreen-nav">
+                    <button class="prev">❮</button>
+                    <button class="next">❯</button>
+                </div>
+                <button class="close-fullscreen-btn">✖</button>
+            `;
+            document.body.appendChild(fullscreenModal);
+            const fullscreenOverlay = document.createElement('div');
+            fullscreenOverlay.classList.add('fullscreen-media-overlay');
+            document.body.appendChild(fullscreenOverlay);
+
             // Initialize slideshow for each property card
             document.querySelectorAll('.media-gallery').forEach(gallery => {
                 const mediaItems = gallery.querySelectorAll('.media-item');
-                const prevBtn = gallery.querySelector('.media-nav-btn.prev');
-                const nextBtn = gallery.querySelector('.media-nav-btn.next');
+                const prevBtn = gallery.querySelector('.slideshow-nav .prev');
+                const nextBtn = gallery.querySelector('.slideshow-nav .next');
+                const dotsContainer = gallery.querySelector('.dots-container');
                 let currentIndex = 0;
+                let autoSlide;
 
                 if (mediaItems.length > 0) {
+                    // Initialize first slide
                     mediaItems[0].classList.add('active');
+                    if (dotsContainer) {
+                        dotsContainer.children[0].classList.add('active');
+                    }
 
-                    // Auto-advance slideshow every 5 seconds
-                    let autoSlide = setInterval(() => {
-                        showMedia(currentIndex + 1, mediaItems);
-                    }, 5000);
+                    // Start auto-advance
+                    if (mediaItems.length > 1) {
+                        startSlideInterval();
+                    }
 
                     // Previous button
-                    prevBtn.addEventListener('click', () => {
-                        clearInterval(autoSlide);
-                        showMedia(currentIndex - 1, mediaItems);
-                        autoSlide = setInterval(() => {
-                            showMedia(currentIndex + 1, mediaItems);
-                        }, 5000);
-                    });
+                    if (prevBtn) {
+                        prevBtn.addEventListener('click', () => {
+                            clearInterval(autoSlide);
+                            showMedia(currentIndex - 1);
+                            startSlideInterval();
+                        });
+                    }
 
                     // Next button
-                    nextBtn.addEventListener('click', () => {
-                        clearInterval(autoSlide);
-                        showMedia(currentIndex + 1, mediaItems);
-                        autoSlide = setInterval(() => {
-                            showMedia(currentIndex + 1, mediaItems);
-                        }, 5000);
-                    });
-
-                    function showMedia(index, items) {
-                        items[currentIndex].classList.remove('active');
-                        currentIndex = (index + items.length) % items.length;
-                        items[currentIndex].classList.add('active');
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', () => {
+                            clearInterval(autoSlide);
+                            showMedia(currentIndex + 1);
+                            startSlideInterval();
+                        });
                     }
+
+                    // Dot navigation
+                    if (dotsContainer) {
+                        const dots = dotsContainer.querySelectorAll('.dot');
+                        dots.forEach((dot, index) => {
+                            dot.addEventListener('click', () => {
+                                clearInterval(autoSlide);
+                                showMedia(index);
+                                startSlideInterval();
+                            });
+                        });
+                    }
+
+                    function showMedia(index) {
+                        // Pause current video
+                        const currentVideo = mediaItems[currentIndex].querySelector('video');
+                        if (currentVideo) {
+                            currentVideo.pause();
+                        }
+
+                        // Update index
+                        currentIndex = (index + mediaItems.length) % mediaItems.length;
+
+                        // Update slides
+                        mediaItems.forEach(item => item.classList.remove('active'));
+                        mediaItems[currentIndex].classList.add('active');
+
+                        // Play new video if present
+                        const newVideo = mediaItems[currentIndex].querySelector('video');
+                        if (newVideo) {
+                            newVideo.play().catch(error => console.log('Video play failed:', error));
+                        }
+
+                        // Update dots
+                        if (dotsContainer) {
+                            const dots = dotsContainer.querySelectorAll('.dot');
+                            dots.forEach(dot => dot.classList.remove('active'));
+                            dots[currentIndex].classList.add('active');
+                        }
+                    }
+
+                    function startSlideInterval() {
+                        autoSlide = setInterval(() => {
+                            showMedia(currentIndex + 1);
+                        }, 5000); // Auto-advance every 5 seconds
+                    }
+
+                    // Full-screen media handling
+                    mediaItems.forEach((item, index) => {
+                        item.addEventListener('click', () => {
+                            clearInterval(autoSlide);
+                            const propertyCard = gallery.closest('.property-card');
+                            const profilePicture = propertyCard.querySelector('.property-image').src;
+                            const mediaList = [profilePicture, ...Array.from(mediaItems).map(m => m.tagName === 'VIDEO' ? m.querySelector('source').src : m.src)];
+                            openFullscreenModal(mediaList, index + 1, gallery, startSlideInterval);
+                        });
+                    });
+                }
+
+                // Profile picture click
+                const profileImage = gallery.closest('.property-card').querySelector('.property-image');
+                if (profileImage) {
+                    profileImage.addEventListener('click', () => {
+                        clearInterval(autoSlide);
+                        const mediaList = [profileImage.src, ...Array.from(mediaItems).map(m => m.tagName === 'VIDEO' ? m.querySelector('source').src : m.src)];
+                        openFullscreenModal(mediaList, 0, gallery, startSlideInterval);
+                    });
                 }
             });
+
+            // Full-screen modal functionality
+            let currentMediaList = [];
+            let currentMediaIndex = 0;
+            let touchStartX = 0;
+
+            function openFullscreenModal(mediaList, index, gallery, restartSlideInterval) {
+                currentMediaList = mediaList;
+                currentMediaIndex = index % mediaList.length;
+                fullscreenModal.style.display = 'flex';
+                fullscreenOverlay.style.display = 'block';
+                showFullscreenMedia(currentMediaIndex);
+
+                // Close modal
+                fullscreenModal.querySelector('.close-fullscreen-btn').addEventListener('click', () => {
+                    closeFullscreenModal(gallery, restartSlideInterval);
+                });
+
+                // Overlay click to close
+                fullscreenOverlay.addEventListener('click', () => {
+                    closeFullscreenModal(gallery, restartSlideInterval);
+                });
+
+                // Navigation buttons
+                fullscreenModal.querySelector('.fullscreen-nav .prev').addEventListener('click', () => {
+                    showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
+                });
+
+                fullscreenModal.querySelector('.fullscreen-nav .next').addEventListener('click', () => {
+                    showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
+                });
+
+                // Swipe support
+                fullscreenModal.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                fullscreenModal.addEventListener('touchend', (e) => {
+                    const touchEndX = e.changedTouches[0].screenX;
+                    const swipeDistance = touchEndX - touchStartX;
+                    if (swipeDistance > 50) {
+                        showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
+                    } else if (swipeDistance < -50) {
+                        showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
+                    }
+                });
+            }
+
+            function showFullscreenMedia(index) {
+                currentMediaIndex = index;
+                const mediaContent = fullscreenModal.querySelector('.fullscreen-media-content');
+                const mediaUrl = currentMediaList[currentMediaIndex];
+                mediaContent.innerHTML = '';
+
+                if (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || mediaUrl.endsWith('.ogg')) {
+                    mediaContent.innerHTML = `
+                        <video controls autoplay muted loop>
+                            <source src="${mediaUrl}" type="video/${mediaUrl.split('.').pop()}">
+                            Your browser does not support the video tag.
+                        </video>
+                    `;
+                } else {
+                    mediaContent.innerHTML = `<img src="${mediaUrl}" alt="Full-screen Media">`;
+                }
+
+                // Update navigation visibility
+                const fullscreenNav = fullscreenModal.querySelector('.fullscreen-nav');
+                if (currentMediaIndex === 0) {
+                    fullscreenNav.style.display = 'none';
+                } else {
+                    fullscreenNav.style.display = 'flex';
+                }
+            }
+
+            function closeFullscreenModal(gallery, restartSlideInterval) {
+                fullscreenModal.style.display = 'none';
+                fullscreenOverlay.style.display = 'none';
+                const currentVideo = fullscreenModal.querySelector('video');
+                if (currentVideo) {
+                    currentVideo.pause();
+                }
+                restartSlideInterval();
+            }
 
             // Copy functionality for phone and email
             document.querySelectorAll('.copy-icon').forEach(icon => {
@@ -276,12 +951,117 @@
                     });
                 });
             });
+
+            // Chat modal functionality
+            const chatModal = document.getElementById('chatModal');
+            const chatOverlay = document.querySelector('.chat-modal-overlay');
+            const chatCloseBtn = document.querySelector('.chat-close-btn');
+            const chatInput = document.querySelector('.chat-input');
+            const chatMessages = document.querySelector('.chat-messages');
+            const chatSendBtn = document.querySelector('.chat-send-btn');
+            const chatUploadImageBtn = document.querySelector('.chat-upload-image-btn');
+            const chatUploadVideoBtn = document.querySelector('.chat-upload-video-btn');
+            const chatEmojiBtn = document.querySelector('.chat-emoji-btn');
+            const emojiPicker = document.querySelector('.emoji-picker');
+            const imageInput = document.getElementById('imageUpload');
+            const videoInput = document.getElementById('videoUpload');
+
+            // Action buttons functionality
+            document.querySelectorAll('.action-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.getAttribute('data-action');
+                    const propertyId = button.getAttribute('data-property-id');
+                    if (action === 'message') {
+                        chatModal.style.display = 'flex';
+                        chatOverlay.style.display = 'block';
+                        chatModal.setAttribute('data-property-id', propertyId);
+                        chatInput.focus();
+                    } else {
+                        alert(`Action: ${action} for property ID: ${propertyId}`);
+                        // Replace with actual backend routes or functionality
+                    }
+                });
+            });
+
+            // Close chat modal
+            chatCloseBtn.addEventListener('click', () => {
+                chatModal.style.display = 'none';
+                chatOverlay.style.display = 'none';
+                chatInput.value = '';
+                emojiPicker.style.display = 'none';
+            });
+
+            // Send message
+            chatSendBtn.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message) {
+                    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('chat-message', 'sent');
+                    messageElement.innerHTML = `<p>${message}</p><div class="chat-message-timestamp">${timestamp}</div>`;
+                    chatMessages.appendChild(messageElement);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    chatInput.value = '';
+                    // Placeholder: Send message to backend
+                    alert(`Message sent for property ID: ${chatModal.getAttribute('data-property-id')}`);
+                }
+            });
+
+            // Image upload
+            chatUploadImageBtn.addEventListener('click', () => {
+                imageInput.click();
+            });
+
+            imageInput.addEventListener('change', () => {
+                const file = imageInput.files[0];
+                if (file) {
+                    alert(`Image selected: ${file.name}`);
+                    // Placeholder: Handle image upload to backend
+                }
+            });
+
+            // Video upload
+            chatUploadVideoBtn.addEventListener('click', () => {
+                videoInput.click();
+            });
+
+            videoInput.addEventListener('change', () => {
+                const file = videoInput.files[0];
+                if (file) {
+                    alert(`Video selected: ${file.name}`);
+                    // Placeholder: Handle video upload to backend
+                }
+            });
+
+            // Emoji picker
+            chatEmojiBtn.addEventListener('click', () => {
+                emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+            });
+
+            emojiPicker.querySelectorAll('button').forEach(emojiBtn => {
+                emojiBtn.addEventListener('click', () => {
+                    chatInput.value += emojiBtn.textContent;
+                    emojiPicker.style.display = 'none';
+                    chatInput.focus();
+                });
+            });
         });
     </script>
 </head>
 <body>
-    <div class="logout-container">
-        <button class="logout-btn" onclick="window.location.href='/logout'">Logout</button>
+    <div class="action-buttons-container">
+        <div class="button-wrapper">
+            <button class="inbox-btn" onclick="alert('Inbox clicked')" title="Inbox">✉️</button>
+            <span class="button-label">Inbox</span>
+        </div>
+        <div class="button-wrapper">
+            <button class="notification-btn" onclick="alert('Notifications clicked')" title="Notifications">🔔</button>
+            <span class="button-label">Notifications</span>
+        </div>
+        <div class="button-wrapper">
+            <button class="logout-btn" onclick="window.location.href='/logout'" title="Logout">🚪</button>
+            <span class="button-label">Logout</span>
+        </div>
     </div>
     <h1>Available Properties</h1>
     {% if properties %}
@@ -319,7 +1099,7 @@
                 <div class="media-gallery">
                     {% for media in property.media %}
                         {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
-                            <video class="media-item" controls>
+                            <video class="media-item" muted loop>
                                 <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
                                 Your browser does not support the video tag.
                             </video>
@@ -327,12 +1107,27 @@
                             <img src="{{ media }}" alt="Property Media" class="media-item">
                         {% endif %}
                     {% endfor %}
-                    <div class="media-nav">
-                        <button class="media-nav-btn prev">❮</button>
-                        <button class="media-nav-btn next">❯</button>
+                    {% if property.media|length > 1 %}
+                    <div class="slideshow-nav">
+                        <button class="prev">❮</button>
+                        <button class="next">❯</button>
                     </div>
+                    <div class="dots-container">
+                        {% for media in property.media %}
+                            <span class="dot"></span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
                 {% endif %}
+                <div class="action-buttons">
+                    <button class="action-btn" data-action="message" data-property-id="{{ property.id }}">Message</button>
+                    <button class="action-btn" data-action="book" data-property-id="{{ property.id }}">Book Room/Property</button>
+                    <button class="action-btn" data-action="call" data-property-id="{{ property.id }}">Call</button>
+                    <button class="action-btn" data-action="rate" data-property-id="{{ property.id }}">Rate Property</button>
+                    <button class="action-btn" data-action="view-ratings" data-property-id="{{ property.id }}">View Property Past Ratings and Reviews</button>
+                    <button class="action-btn" data-action="view-location" data-property-id="{{ property.id }}">View Property Location</button>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -340,5 +1135,32 @@
     {% else %}
     <p>No properties available at the moment.</p>
     {% endif %}
+    <div class="chat-modal-overlay"></div>
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <h2>Chat with Property Manager</h2>
+            <button class="chat-close-btn">✖</button>
+        </div>
+        <div class="chat-messages">
+            <!-- Messages will be appended here -->
+        </div>
+        <div class="chat-input-area">
+            <textarea class="chat-input" placeholder="Type a message..."></textarea>
+            <button class="chat-send-btn"></button>
+            <button class="chat-upload-image-btn"></button>
+            <button class="chat-upload-video-btn"></button>
+            <button class="chat-emoji-btn"></button>
+            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+            <input type="file" id="videoUpload" accept="video/*" style="display: none;">
+            <div class="emoji-picker">
+                <button>😊</button>
+                <button>👍</button>
+                <button>❤️</button>
+                <button>😂</button>
+                <button>😢</button>
+                <button>😎</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
