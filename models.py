@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime  # ✅ Added
 
 db = SQLAlchemy()
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,6 +10,7 @@ class User(db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(50), nullable=False)  # "Resident" or "Manager"
+
 
 class Property(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,25 +23,28 @@ class Property(db.Model):
     location = db.Column(db.String(255), nullable=False)
     sub_county = db.Column(db.String(255), nullable=False)
     landmarks = db.Column(db.Text, nullable=False)
-    
+
     # Availability options (9-5, Full-time, Part-time)
     availability = db.Column(db.String(20), nullable=False)
-    
+
     viewing_schedule = db.Column(db.String(255), nullable=False)
     features = db.Column(db.Text, nullable=False)  # Store features & prices as JSON string
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to manager
 
-    def __init__(self, name, property_type, status, phone, email, description, location, sub_county, landmarks, availability, viewing_schedule, features, manager_id):
-        self.name = name
-        self.property_type = property_type
-        self.status = status
-        self.phone = phone
-        self.email = email
-        self.description = description
-        self.location = location
-        self.sub_county = sub_county
-        self.landmarks = landmarks
-        self.availability = availability
-        self.viewing_schedule = viewing_schedule
-        self.features = features
-        self.manager_id = manager_id
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    sender_role = db.Column(db.String(50), nullable=False)  # 'Resident' or 'Manager'
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    property = db.relationship('Property', backref=db.backref('messages', lazy=True))
+    sender = db.relationship('User', backref=db.backref('messages', lazy=True))
+
+    def __init__(self, property_id, sender_id, sender_role, message):
+        self.property_id = property_id
+        self.sender_id = sender_id
+        self.sender_role = sender_role
+        self.message = message

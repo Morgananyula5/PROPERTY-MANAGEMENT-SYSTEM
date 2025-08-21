@@ -5,6 +5,10 @@ from models import db, User, Property
 from config import Config
 import os
 import json
+from datetime import datetime
+from flask import jsonify
+from flask_migrate import Migrate   # ✅ add this
+from models import db  # import your db from models
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -492,6 +496,65 @@ def add_media(property_id):
         flash(f"Error adding media: {str(e)}", "danger")
 
     return redirect(url_for('manager_dashboard'))
+
+
+# Route to Send Message
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Unauthorized access'}), 401
+
+    data = request.get_json()
+    property_id = data.get('property_id')
+    message = data.get('message')
+    sender_id = data.get('sender_id')
+    sender_role = data.get('sender_role')
+
+    if not all([property_id, message, sender_id, sender_role]):
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+
+    property = Property.query.get_or_404(property_id)
+    if sender_role == 'Resident' and session['role'] != 'Resident':
+        return jsonify({'success': False, 'error': 'Invalid sender role'}), 403
+    if sender_role == 'Manager' and (session['role'] != 'Manager' or property.manager_id != sender_id):
+        return jsonify({'success': False, 'error': 'Unauthorized to send as manager'}), 403
+
+    new_message = Message(
+        property_id=property_id,
+        sender_id=sender_id,
+        sender_role=sender_role,
+        message=message,
+        timestamp=datetime.utcnow()
+    )
+
+    try:
+        db.session.add(new_message)
+        db.session.commit()
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# Route to Get Messages
+@app.route('/get_messages/<int:manager_id>', methods=['GET'])
+def get_messages(manager_id):
+    if 'user_id' not in session or session['role'] != 'Manager' or session['user_id'] != manager_id:
+        return jsonify({'success': False, 'error': 'Unauthorized access'}), 401
+
+    # Get properties managed by the manager
+    properties = Property.query.filter_by(manager_id=manager_id).all()
+    property_ids = [p.id for p in properties]
+
+    # Fetch messages for those properties
+    messages = Message.query.filter(Message.property_id.in_(property_ids)).order_by(Message.timestamp.asc()).all()
+
+    messages_data = [{
+        'message': msg.message,
+        'sender_role': msg.sender_role,
+        'timestamp': msg.timestamp.isoformat()
+    } for msg in messages]
+
+    return jsonify({'success': True, 'messages': messages_data}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
