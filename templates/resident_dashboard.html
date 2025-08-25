@@ -991,20 +991,132 @@
                 emojiPicker.style.display = 'none';
             });
 
+            // Add fetchMessages function
+            let messagePollingInterval;
+            function fetchMessages(propertyId) {
+                fetch(`/get_messages?property_id=${encodeURIComponent(propertyId)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        chatMessages.innerHTML = ''; // Clear existing messages
+                        data.messages.forEach(msg => {
+                            const messageElement = document.createElement('div');
+                            const isSent = msg.sender_id === {{ session['user_id'] | default(0) }};
+                            messageElement.classList.add('chat-message', isSent ? 'sent' : 'received');
+                            const timestamp = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            messageElement.innerHTML = `<p>${msg.content}</p><div class="chat-message-timestamp">${timestamp}</div>`;
+                            chatMessages.appendChild(messageElement);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } else {
+                        console.error('Failed to fetch messages:', data.message);
+                        alert('Failed to load messages: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching messages:', error);
+                    alert('Error fetching messages: ' + error.message);
+                });
+            }
+
             // Send message
             chatSendBtn.addEventListener('click', () => {
                 const message = chatInput.value.trim();
-                if (message) {
+                const propertyId = chatModal.getAttribute('data-property-id');
+                if (message && propertyId) {
                     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     const messageElement = document.createElement('div');
                     messageElement.classList.add('chat-message', 'sent');
                     messageElement.innerHTML = `<p>${message}</p><div class="chat-message-timestamp">${timestamp}</div>`;
                     chatMessages.appendChild(messageElement);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                    // Send message to backend
+                    fetch('/send_message', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            property_id: propertyId,
+                            content: message,
+                            is_manager: false
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status !== 'success') {
+                            alert('Failed to send message: ' + data.message);
+                            messageElement.remove();
+                        } else {
+                            // Refresh messages to include the new one
+                            fetchMessages(propertyId);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                        alert('Error sending message: ' + error.message);
+                        messageElement.remove();
+                    });
+
                     chatInput.value = '';
-                    // Placeholder: Send message to backend
-                    alert(`Message sent for property ID: ${chatModal.getAttribute('data-property-id')}`);
+                } else {
+                    alert('Please enter a message and ensure a property is selected.');
                 }
+            });
+
+            // Update the message button click to start polling
+            document.querySelectorAll('.action-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.getAttribute('data-action');
+                    const propertyId = button.getAttribute('data-property-id');
+                    if (action === 'message') {
+                        chatModal.style.display = 'flex';
+                        chatOverlay.style.display = 'block';
+                        chatModal.setAttribute('data-property-id', propertyId);
+                        chatInput.focus();
+                        // Clear existing messages and fetch new ones
+                        chatMessages.innerHTML = '';
+                        fetchMessages(propertyId);
+                        // Start polling for new messages
+                        clearInterval(messagePollingInterval);
+                        messagePollingInterval = setInterval(() => fetchMessages(propertyId), 5000);
+                    } else {
+                        alert(`Action: ${action} for property ID: ${propertyId}`);
+                    }
+                });
+            });
+
+            // Stop polling when closing the chat modal
+            chatCloseBtn.addEventListener('click', () => {
+                chatModal.style.display = 'none';
+                chatOverlay.style.display = 'none';
+                chatInput.value = '';
+                emojiPicker.style.display = 'none';
+                clearInterval(messagePollingInterval);
             });
 
             // Image upload
