@@ -14,19 +14,19 @@
         }
 
         body {
-            background-color: #1DA1F2; /* Twitter Blue Background */
+            background-color: #1DA1F2;
             color: #FFFFFF;
             font-family: 'Source Sans Pro', Arial, sans-serif;
             text-align: center;
             min-height: 100vh;
             padding: 20px;
-            font-size: 1.2em; /* Enlarged from 1.1em */
+            font-size: 1.2em;
         }
 
         h1 {
-            font-size: 3em; /* Enlarged from 2.8em */
+            font-size: 3em;
             margin-bottom: 20px;
-            color: #FFFFFF; /* White for contrast on Twitter Blue */
+            color: #FFFFFF;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             animation: fadeIn 1s ease-in;
         }
@@ -41,7 +41,7 @@
         }
 
         .property-card {
-            background-color: #007BCE; /* Darker Twitter Blue for contrast */
+            background-color: #007BCE;
             border-radius: 12px;
             padding: 15px;
             overflow: hidden;
@@ -52,7 +52,7 @@
 
         .property-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.6); /* Twitter Blue glow */
+            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.6);
         }
 
         .property-image {
@@ -60,7 +60,7 @@
             height: 180px;
             object-fit: contain;
             border-radius: 10px;
-            border: 2px solid #4AB3F4; /* Lighter Twitter Blue */
+            border: 2px solid #4AB3F4;
             transition: transform 0.3s ease;
             cursor: pointer;
             background: #FFFFFF;
@@ -85,7 +85,7 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            display: none; /* Hidden by default for slideshow */
+            display: none;
             border-radius: 8px;
             cursor: pointer;
         }
@@ -251,12 +251,12 @@
 
         .property-info {
             padding: 10px;
-            font-size: 1.1em; /* Enlarged from 1em */
+            font-size: 1.1em;
             color: #E1E8ED;
         }
 
         .property-info h3 {
-            font-size: 1.8em; /* Enlarged from 1.6em */
+            font-size: 1.8em;
             color: #FFFFFF;
             margin-bottom: 8px;
             font-family: 'Source Sans Pro', Arial, sans-serif;
@@ -268,7 +268,7 @@
         }
 
         .property-info p strong {
-            font-weight: 700; /* Very bold for headings */
+            font-weight: 700;
         }
 
         .property-info ul {
@@ -279,7 +279,7 @@
 
         .property-info li {
             margin: 5px 0;
-            font-size: 1em; /* Enlarged from 0.95em */
+            font-size: 1em;
             color: #FFFFFF;
         }
 
@@ -292,8 +292,8 @@
 
         .copy-icon {
             cursor: pointer;
-            font-size: 1.2em; /* Enlarged from 1.1em */
-            color: #4AB3F4; /* Lighter Twitter Blue */
+            font-size: 1.2em;
+            color: #4AB3F4;
             transition: color 0.3s ease, transform 0.3s ease;
         }
 
@@ -499,7 +499,7 @@
         .chat-header {
             background: linear-gradient(135deg, #1DA1F2, #66BFFF);
             color: #FFFFFF;
-            padding: 10px;
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -507,29 +507,114 @@
         }
 
         .chat-header h2 {
-            font-size: 1.2em;
+            font-size: 1.3em;
+            font-weight: 700;
             margin: 0;
         }
 
-        .chat-close-btn {
+        .chat-close-btn, .chat-back-btn {
             background: none;
             border: none;
             color: #FFFFFF;
-            font-size: 1.2em;
+            font-size: 1.3em;
             cursor: pointer;
             transition: transform 0.3s ease;
+            padding: 5px;
         }
 
-        .chat-close-btn:hover {
-            transform: scale(1.1);
+        .chat-close-btn:hover, .chat-back-btn:hover {
+            transform: scale(1.2);
         }
 
-        .chat-messages {
+        .chat-content {
             flex-grow: 1;
-            padding: 15px;
             overflow-y: auto;
             background: #F5F8FA;
             color: #14171A;
+        }
+
+        .conversation-list {
+            padding: 20px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E1E8ED;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #F9FAFB;
+            border: 1px solid #E1E8ED;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .conversation-item:hover {
+            background: linear-gradient(135deg, rgba(29, 161, 242, 0.1), rgba(0, 95, 153, 0.1));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversation-item:active {
+            transform: scale(0.98);
+        }
+
+        .conversation-item .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1DA1F2;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .conversation-item p {
+            flex-grow: 1;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1DA1F2;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .open-conversation-btn {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .open-conversation-btn:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .open-conversation-btn:active {
+            transform: scale(0.95);
+        }
+
+        .chat-messages {
+            padding: 15px;
+            display: none;
         }
 
         .chat-message {
@@ -561,7 +646,7 @@
         }
 
         .chat-input-area {
-            display: flex;
+            display: none;
             align-items: center;
             padding: 10px;
             background: #FFFFFF;
@@ -729,6 +814,21 @@
             .button-label {
                 font-size: 0.7rem;
             }
+            .conversation-item {
+                padding: 10px;
+            }
+            .conversation-item .avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+            .conversation-item p {
+                font-size: 1em;
+            }
+            .open-conversation-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
         }
     </style>
     <script>
@@ -759,18 +859,15 @@
                 let autoSlide;
 
                 if (mediaItems.length > 0) {
-                    // Initialize first slide
                     mediaItems[0].classList.add('active');
                     if (dotsContainer) {
                         dotsContainer.children[0].classList.add('active');
                     }
 
-                    // Start auto-advance
                     if (mediaItems.length > 1) {
                         startSlideInterval();
                     }
 
-                    // Previous button
                     if (prevBtn) {
                         prevBtn.addEventListener('click', () => {
                             clearInterval(autoSlide);
@@ -779,7 +876,6 @@
                         });
                     }
 
-                    // Next button
                     if (nextBtn) {
                         nextBtn.addEventListener('click', () => {
                             clearInterval(autoSlide);
@@ -788,7 +884,6 @@
                         });
                     }
 
-                    // Dot navigation
                     if (dotsContainer) {
                         const dots = dotsContainer.querySelectorAll('.dot');
                         dots.forEach((dot, index) => {
@@ -801,26 +896,21 @@
                     }
 
                     function showMedia(index) {
-                        // Pause current video
                         const currentVideo = mediaItems[currentIndex].querySelector('video');
                         if (currentVideo) {
                             currentVideo.pause();
                         }
 
-                        // Update index
                         currentIndex = (index + mediaItems.length) % mediaItems.length;
 
-                        // Update slides
                         mediaItems.forEach(item => item.classList.remove('active'));
                         mediaItems[currentIndex].classList.add('active');
 
-                        // Play new video if present
                         const newVideo = mediaItems[currentIndex].querySelector('video');
                         if (newVideo) {
                             newVideo.play().catch(error => console.log('Video play failed:', error));
                         }
 
-                        // Update dots
                         if (dotsContainer) {
                             const dots = dotsContainer.querySelectorAll('.dot');
                             dots.forEach(dot => dot.classList.remove('active'));
@@ -831,10 +921,9 @@
                     function startSlideInterval() {
                         autoSlide = setInterval(() => {
                             showMedia(currentIndex + 1);
-                        }, 5000); // Auto-advance every 5 seconds
+                        }, 5000);
                     }
 
-                    // Full-screen media handling
                     mediaItems.forEach((item, index) => {
                         item.addEventListener('click', () => {
                             clearInterval(autoSlide);
@@ -844,16 +933,15 @@
                             openFullscreenModal(mediaList, index + 1, gallery, startSlideInterval);
                         });
                     });
-                }
 
-                // Profile picture click
-                const profileImage = gallery.closest('.property-card').querySelector('.property-image');
-                if (profileImage) {
-                    profileImage.addEventListener('click', () => {
-                        clearInterval(autoSlide);
-                        const mediaList = [profileImage.src, ...Array.from(mediaItems).map(m => m.tagName === 'VIDEO' ? m.querySelector('source').src : m.src)];
-                        openFullscreenModal(mediaList, 0, gallery, startSlideInterval);
-                    });
+                    const profileImage = gallery.closest('.property-card').querySelector('.property-image');
+                    if (profileImage) {
+                        profileImage.addEventListener('click', () => {
+                            clearInterval(autoSlide);
+                            const mediaList = [profileImage.src, ...Array.from(mediaItems).map(m => m.tagName === 'VIDEO' ? m.querySelector('source').src : m.src)];
+                            openFullscreenModal(mediaList, 0, gallery, startSlideInterval);
+                        });
+                    }
                 }
             });
 
@@ -869,17 +957,14 @@
                 fullscreenOverlay.style.display = 'block';
                 showFullscreenMedia(currentMediaIndex);
 
-                // Close modal
                 fullscreenModal.querySelector('.close-fullscreen-btn').addEventListener('click', () => {
                     closeFullscreenModal(gallery, restartSlideInterval);
                 });
 
-                // Overlay click to close
                 fullscreenOverlay.addEventListener('click', () => {
                     closeFullscreenModal(gallery, restartSlideInterval);
                 });
 
-                // Navigation buttons
                 fullscreenModal.querySelector('.fullscreen-nav .prev').addEventListener('click', () => {
                     showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
                 });
@@ -888,7 +973,6 @@
                     showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
                 });
 
-                // Swipe support
                 fullscreenModal.addEventListener('touchstart', (e) => {
                     touchStartX = e.changedTouches[0].screenX;
                 });
@@ -921,7 +1005,6 @@
                     mediaContent.innerHTML = `<img src="${mediaUrl}" alt="Full-screen Media">`;
                 }
 
-                // Update navigation visibility
                 const fullscreenNav = fullscreenModal.querySelector('.fullscreen-nav');
                 if (currentMediaIndex === 0) {
                     fullscreenNav.style.display = 'none';
@@ -940,7 +1023,7 @@
                 restartSlideInterval();
             }
 
-            // Copy functionality for phone and email
+            // Copy functionality
             document.querySelectorAll('.copy-icon').forEach(icon => {
                 icon.addEventListener('click', () => {
                     const text = icon.getAttribute('data-copy');
@@ -952,10 +1035,11 @@
                 });
             });
 
-            // Chat modal functionality
+            // Chat modal elements
             const chatModal = document.getElementById('chatModal');
             const chatOverlay = document.querySelector('.chat-modal-overlay');
             const chatCloseBtn = document.querySelector('.chat-close-btn');
+            const chatBackBtn = document.querySelector('.chat-back-btn');
             const chatInput = document.querySelector('.chat-input');
             const chatMessages = document.querySelector('.chat-messages');
             const chatSendBtn = document.querySelector('.chat-send-btn');
@@ -965,34 +1049,92 @@
             const emojiPicker = document.querySelector('.emoji-picker');
             const imageInput = document.getElementById('imageUpload');
             const videoInput = document.getElementById('videoUpload');
+            const inboxBtn = document.querySelector('.inbox-btn');
+            const conversationList = document.querySelector('.conversation-list');
+            const chatInputArea = document.querySelector('.chat-input-area');
+            const chatHeaderTitle = document.querySelector('.chat-header h2');
 
-            // Action buttons functionality
-            document.querySelectorAll('.action-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const action = button.getAttribute('data-action');
-                    const propertyId = button.getAttribute('data-property-id');
-                    if (action === 'message') {
-                        chatModal.style.display = 'flex';
-                        chatOverlay.style.display = 'block';
-                        chatModal.setAttribute('data-property-id', propertyId);
-                        chatInput.focus();
-                    } else {
-                        alert(`Action: ${action} for property ID: ${propertyId}`);
-                        // Replace with actual backend routes or functionality
-                    }
-                });
-            });
+            // Function to show conversation list
+            function showConversationList() {
+                chatHeaderTitle.textContent = 'Inbox';
+                conversationList.style.display = 'block';
+                chatMessages.style.display = 'none';
+                chatInputArea.style.display = 'none';
+                chatBackBtn.style.display = 'none';
+                fetchConversations();
+            }
 
-            // Close chat modal
-            chatCloseBtn.addEventListener('click', () => {
-                chatModal.style.display = 'none';
-                chatOverlay.style.display = 'none';
-                chatInput.value = '';
-                emojiPicker.style.display = 'none';
-            });
+            // Function to show chat messages
+            function showChatMessages(propertyId, propertyName) {
+                chatHeaderTitle.textContent = `Chat with ${propertyName}`;
+                conversationList.style.display = 'none';
+                chatMessages.style.display = 'block';
+                chatInputArea.style.display = 'flex';
+                chatBackBtn.style.display = 'inline-block';
+                chatModal.setAttribute('data-property-id', propertyId);
+                chatMessages.innerHTML = '';
+                chatInput.focus();
+                fetchMessages(propertyId);
+                clearInterval(messagePollingInterval);
+                messagePollingInterval = setInterval(() => fetchMessages(propertyId), 5000);
+            }
 
-            // Add fetchMessages function
+            // Function to fetch conversations
             let messagePollingInterval;
+            function fetchConversations() {
+                fetch('/get_conversations', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        conversationList.innerHTML = '';
+                        if (data.conversations.length === 0) {
+                            conversationList.innerHTML = '<p style="color: #657786; text-align: center; font-size: 1em;">No conversations found.</p>';
+                        } else {
+                            data.conversations.forEach(conv => {
+                                const convElement = document.createElement('div');
+                                convElement.classList.add('conversation-item');
+                                const avatarLetter = conv.property_name.charAt(0).toUpperCase();
+                                convElement.innerHTML = `
+                                    <div class="avatar">${avatarLetter}</div>
+                                    <p>${conv.property_name}</p>
+                                    <button class="open-conversation-btn" data-property-id="${conv.property_id}" data-property-name="${conv.property_name}">Open</button>
+                                `;
+                                conversationList.appendChild(convElement);
+                            });
+
+                            document.querySelectorAll('.open-conversation-btn').forEach(btn => {
+                                btn.addEventListener('click', () => {
+                                    const propertyId = btn.getAttribute('data-property-id');
+                                    const propertyName = btn.getAttribute('data-property-name');
+                                    showChatMessages(propertyId, propertyName);
+                                });
+                            });
+                        }
+                    } else {
+                        alert('Failed to load conversations: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching conversations:', error);
+                    alert('Error loading conversations: ' + error.message);
+                });
+            }
+
+            // Function to fetch messages
             function fetchMessages(propertyId) {
                 fetch(`/get_messages?property_id=${encodeURIComponent(propertyId)}`, {
                     method: 'GET',
@@ -1012,7 +1154,7 @@
                 })
                 .then(data => {
                     if (data.status === 'success') {
-                        chatMessages.innerHTML = ''; // Clear existing messages
+                        chatMessages.innerHTML = '';
                         data.messages.forEach(msg => {
                             const messageElement = document.createElement('div');
                             const isSent = msg.sender_id === {{ session['user_id'] | default(0) }};
@@ -1033,6 +1175,45 @@
                 });
             }
 
+            // Inbox button functionality
+            inboxBtn.addEventListener('click', () => {
+                chatModal.style.display = 'flex';
+                chatOverlay.style.display = 'block';
+                showConversationList();
+            });
+
+            // Back button functionality
+            chatBackBtn.addEventListener('click', () => {
+                clearInterval(messagePollingInterval);
+                showConversationList();
+            });
+
+            // Action buttons functionality
+            document.querySelectorAll('.action-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.getAttribute('data-action');
+                    const propertyId = button.getAttribute('data-property-id');
+                    if (action === 'message') {
+                        const propertyName = button.closest('.property-card').querySelector('.property-info h3').textContent;
+                        chatModal.style.display = 'flex';
+                        chatOverlay.style.display = 'block';
+                        showChatMessages(propertyId, propertyName);
+                    } else {
+                        alert(`Action: ${action} for property ID: ${propertyId}`);
+                    }
+                });
+            });
+
+            // Close chat modal
+            chatCloseBtn.addEventListener('click', () => {
+                chatModal.style.display = 'none';
+                chatOverlay.style.display = 'none';
+                chatInput.value = '';
+                emojiPicker.style.display = 'none';
+                clearInterval(messagePollingInterval);
+                showConversationList();
+            });
+
             // Send message
             chatSendBtn.addEventListener('click', () => {
                 const message = chatInput.value.trim();
@@ -1045,7 +1226,6 @@
                     chatMessages.appendChild(messageElement);
                     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-                    // Send message to backend
                     fetch('/send_message', {
                         method: 'POST',
                         headers: {
@@ -1072,7 +1252,6 @@
                             alert('Failed to send message: ' + data.message);
                             messageElement.remove();
                         } else {
-                            // Refresh messages to include the new one
                             fetchMessages(propertyId);
                         }
                     })
@@ -1088,37 +1267,6 @@
                 }
             });
 
-            // Update the message button click to start polling
-            document.querySelectorAll('.action-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const action = button.getAttribute('data-action');
-                    const propertyId = button.getAttribute('data-property-id');
-                    if (action === 'message') {
-                        chatModal.style.display = 'flex';
-                        chatOverlay.style.display = 'block';
-                        chatModal.setAttribute('data-property-id', propertyId);
-                        chatInput.focus();
-                        // Clear existing messages and fetch new ones
-                        chatMessages.innerHTML = '';
-                        fetchMessages(propertyId);
-                        // Start polling for new messages
-                        clearInterval(messagePollingInterval);
-                        messagePollingInterval = setInterval(() => fetchMessages(propertyId), 5000);
-                    } else {
-                        alert(`Action: ${action} for property ID: ${propertyId}`);
-                    }
-                });
-            });
-
-            // Stop polling when closing the chat modal
-            chatCloseBtn.addEventListener('click', () => {
-                chatModal.style.display = 'none';
-                chatOverlay.style.display = 'none';
-                chatInput.value = '';
-                emojiPicker.style.display = 'none';
-                clearInterval(messagePollingInterval);
-            });
-
             // Image upload
             chatUploadImageBtn.addEventListener('click', () => {
                 imageInput.click();
@@ -1128,7 +1276,6 @@
                 const file = imageInput.files[0];
                 if (file) {
                     alert(`Image selected: ${file.name}`);
-                    // Placeholder: Handle image upload to backend
                 }
             });
 
@@ -1141,7 +1288,6 @@
                 const file = videoInput.files[0];
                 if (file) {
                     alert(`Video selected: ${file.name}`);
-                    // Placeholder: Handle video upload to backend
                 }
             });
 
@@ -1163,7 +1309,7 @@
 <body>
     <div class="action-buttons-container">
         <div class="button-wrapper">
-            <button class="inbox-btn" onclick="alert('Inbox clicked')" title="Inbox">✉️</button>
+            <button class="inbox-btn" title="Inbox">✉️</button>
             <span class="button-label">Inbox</span>
         </div>
         <div class="button-wrapper">
@@ -1250,11 +1396,13 @@
     <div class="chat-modal-overlay"></div>
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h2>Chat with Property Manager</h2>
+            <button class="chat-back-btn" style="display: none;">⬅</button>
+            <h2>Inbox</h2>
             <button class="chat-close-btn">✖</button>
         </div>
-        <div class="chat-messages">
-            <!-- Messages will be appended here -->
+        <div class="chat-content">
+            <div class="conversation-list"></div>
+            <div class="chat-messages"></div>
         </div>
         <div class="chat-input-area">
             <textarea class="chat-input" placeholder="Type a message..."></textarea>

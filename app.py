@@ -605,7 +605,7 @@ def send_message():
 # Route to Get Conversations
 @app.route('/get_conversations', methods=['GET'])
 def get_conversations():
-    if 'user_id' not in session or session.get('role') != 'Manager':
+    if 'user_id' not in session:
         logger.warning("Unauthorized access attempt to /get_conversations")
         return jsonify({'status': 'error', 'message': 'Unauthorized access'}), 401
 
@@ -616,27 +616,40 @@ def get_conversations():
             logger.error(f"User not found: {user_id}")
             return jsonify({'status': 'error', 'message': 'User not found'}), 404
 
-        # Get the manager's property
-        property = Property.query.filter_by(manager_id=user_id).first()
-        if not property:
-            logger.error(f"No property associated with manager_id: {user_id}")
-            return jsonify({'status': 'error', 'message': 'No property associated with this manager'}), 404
+        if user.role == 'Manager':
+            # Get the manager's property
+            property = Property.query.filter_by(manager_id=user_id).first()
+            if not property:
+                logger.error(f"No property associated with manager_id: {user_id}")
+                return jsonify({'status': 'error', 'message': 'No property associated with this manager'}), 404
 
-        # Get unique senders who have messaged this property
-        senders = db.session.query(Message.sender_id, User.username).join(
-            User, Message.sender_id == User.id
-        ).filter(
-            Message.property_id == property.id,
-            Message.sender_id != user_id
-        ).distinct().all()
+            # Get unique senders who have messaged this property
+            senders = db.session.query(Message.sender_id, User.username).join(
+                User, Message.sender_id == User.id
+            ).filter(
+                Message.property_id == property.id,
+                Message.sender_id != user_id
+            ).distinct().all()
 
-        conversations = [{
-            'sender_id': sender_id,
-            'sender_name': username,
-            'property_id': property.id
-        } for sender_id, username in senders]
+            conversations = [{
+                'sender_id': sender_id,
+                'sender_name': username,
+                'property_id': property.id
+            } for sender_id, username in senders]
+        else:
+            # Resident: get properties they have messaged
+            properties = db.session.query(Message.property_id, Property.name).join(
+                Property, Message.property_id == Property.id
+            ).filter(
+                (Message.sender_id == user_id) | (Message.recipient_id == user_id)
+            ).distinct().all()
 
-        logger.info(f"Conversations fetched successfully for manager_id: {user_id}")
+            conversations = [{
+                'property_id': property_id,
+                'property_name': name
+            } for property_id, name in properties]
+
+        logger.info(f"Conversations fetched successfully for user_id: {user_id}")
         return jsonify({'status': 'success', 'conversations': conversations})
     except Exception as e:
         logger.error(f"Error fetching conversations: {str(e)}")
@@ -684,16 +697,13 @@ def get_messages():
                 except ValueError:
                     logger.error(f"Invalid sender_id: {sender_id}")
                     return jsonify({'status': 'error', 'message': 'Invalid sender ID'}), 400
-                # Fetch messages for specific sender
                 messages = Message.query.filter(
                     Message.property_id == property_id,
                     (Message.sender_id == sender_id) | (Message.recipient_id == sender_id)
                 ).order_by(Message.timestamp.asc()).all()
             else:
-                # Fetch all messages for the property
                 messages = Message.query.filter_by(property_id=property_id).order_by(Message.timestamp.asc()).all()
         else:
-            # Resident: fetch messages where they are sender or recipient
             messages = Message.query.filter(
                 Message.property_id == property_id,
                 (Message.sender_id == user_id) | (Message.recipient_id == user_id)
