@@ -44,7 +44,7 @@
             background-color: #007BCE;
             border-radius: 12px;
             padding: 15px;
-            overflow: hidden;
+            overflow: visible;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             animation: slideUp 0.5s ease-out;
@@ -79,6 +79,7 @@
             border-radius: 8px;
             border: 2px solid #4AB3F4;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            pointer-events: auto; /* Ensure media gallery is clickable */
         }
 
         .media-item {
@@ -250,7 +251,7 @@
         }
 
         .property-info {
-            padding: 10px;
+            padding: 15px;
             font-size: 1.1em;
             color: #E1E8ED;
         }
@@ -258,26 +259,63 @@
         .property-info h3 {
             font-size: 1.8em;
             color: #FFFFFF;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-family: 'Source Sans Pro', Arial, sans-serif;
+            text-align: center;
         }
 
-        .property-info p {
+        .property-detail-block {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #4AB3F4;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .property-detail-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(29, 161, 242, 0.3);
+        }
+
+        .property-detail-block h4 {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #FFFFFF;
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s ease;
+            pointer-events: auto; /* Ensure h4 captures hover events */
+        }
+
+        .property-detail-block h4:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+        }
+
+        .property-detail-block p, .property-detail-block ul, .property-detail-block .input-with-copy, .property-detail-block .media-gallery {
+            pointer-events: none; /* Prevent child elements from stealing hover events */
+        }
+
+        .property-detail-block p {
             margin: 5px 0;
             line-height: 1.4;
+            color: #E1E8ED;
         }
 
-        .property-info p strong {
-            font-weight: 700;
-        }
-
-        .property-info ul {
+        .property-detail-block ul {
             list-style: none;
             margin: 8px 0;
             padding-left: 10px;
         }
 
-        .property-info li {
+        .property-detail-block li {
             margin: 5px 0;
             font-size: 1em;
             color: #FFFFFF;
@@ -288,6 +326,8 @@
             align-items: center;
             gap: 8px;
             margin: 5px 0;
+            flex-wrap: wrap;
+            word-break: break-all;
         }
 
         .copy-icon {
@@ -295,11 +335,54 @@
             font-size: 1.2em;
             color: #4AB3F4;
             transition: color 0.3s ease, transform 0.3s ease;
+            pointer-events: auto; /* Allow clicking copy icon */
         }
 
         .copy-icon:hover {
             color: #FFFFFF;
             transform: scale(1.1);
+        }
+
+        .detail-popup {
+            position: fixed;
+            width: 250px;
+            max-height: 300px;
+            background: #FFFFFF;
+            color: #14171A;
+            border: 0; /* Removed border to minimize gap */
+            border-radius: 8px;
+            padding: 5px; /* Reduced padding */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtler shadow */
+            z-index: 20000;
+            display: none;
+            overflow-y: auto;
+            animation: slideInPopup 0.2s ease-in;
+            pointer-events: none;
+        }
+
+        .detail-popup h5 {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #1DA1F2;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .detail-popup p, .detail-popup ul {
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: #14171A;
+            text-align: left;
+        }
+
+        .detail-popup ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .detail-popup li {
+            margin: 5px 0;
         }
 
         .action-buttons-container {
@@ -750,6 +833,11 @@
             to { transform: translate(-50%, -50%); opacity: 1; }
         }
 
+        @keyframes slideInPopup {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         /* Responsive Design */
         @media (max-width: 600px) {
             .grid-container {
@@ -828,6 +916,21 @@
             .open-conversation-btn {
                 padding: 6px 12px;
                 font-size: 0.8em;
+            }
+            .property-detail-block {
+                padding: 10px;
+            }
+            .property-detail-block h4 {
+                font-size: 1.1em;
+                padding: 6px;
+            }
+            .detail-popup {
+                width: 200px;
+                max-height: 250px;
+                padding: 5px; /* Match reduced padding */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Match subtler shadow */
+                z-index: 20000;
+                pointer-events: none;
             }
         }
     </style>
@@ -1033,6 +1136,115 @@
                         console.error('Failed to copy:', err);
                     });
                 });
+            });
+
+            // Popup functionality for property detail headings with event delegation
+            const popups = []; // Store popups for cleanup
+
+            document.querySelectorAll('.property-card').forEach((card, cardIndex) => {
+                const propertyInfo = card.querySelector('.property-info');
+                if (!propertyInfo) {
+                    console.warn(`No property-info found in property-card at index ${cardIndex}`);
+                    return;
+                }
+
+                // Create popups for all h4 elements within this card
+                propertyInfo.querySelectorAll('.property-detail-block').forEach((block, blockIndex) => {
+                    const heading = block.querySelector('h4');
+                    if (!heading) {
+                        console.warn(`No h4 found in property-detail-block at card ${cardIndex}, block ${blockIndex}`);
+                        return;
+                    }
+
+                    const headingText = heading.textContent.trim();
+                    const popup = document.createElement('div');
+                    popup.classList.add('detail-popup');
+                    popup.setAttribute('data-heading-id', `popup-${cardIndex}-${blockIndex}-${headingText.replace(/\s+/g, '-')}`);
+                    popups.push(popup); // Store popup for cleanup
+
+                    // Find content element within the block
+                    let contentElement = block.querySelector('p, ul, .input-with-copy, .media-gallery');
+                    let popupContent = '';
+
+                    console.log(`Processing card ${cardIndex}, heading: ${headingText}, contentElement:`, contentElement);
+
+                    // Handle different content types
+                    if (!contentElement) {
+                        popupContent = `<h5>${headingText}</h5><p>No details available</p>`;
+                    } else if (contentElement.classList.contains('media-gallery')) {
+                        const mediaItems = contentElement.querySelectorAll('.media-item');
+                        popupContent = `<h5>${headingText}</h5><p>${mediaItems.length} media item${mediaItems.length !== 1 ? 's' : ''} available in gallery</p>`;
+                    } else if (contentElement.tagName === 'UL') {
+                        popupContent = `<h5>${headingText}</h5><ul>${contentElement.innerHTML}</ul>`;
+                    } else if (contentElement.classList.contains('input-with-copy')) {
+                        const text = contentElement.querySelector('p')?.textContent || 'No details available';
+                        popupContent = `<h5>${headingText}</h5><p>${text}</p>`;
+                    } else if (contentElement.tagName === 'P') {
+                        const text = contentElement.textContent || 'No details available';
+                        popupContent = `<h5>${headingText}</h5><p>${text}</p>`;
+                    } else {
+                        popupContent = `<h5>${headingText}</h5><p>No details available</p>`;
+                    }
+
+                    popup.innerHTML = popupContent;
+                    card.appendChild(popup); // Append to card to maintain stacking context
+                    console.log(`Popup created for card ${cardIndex}, heading: ${headingText}:`, popupContent);
+                });
+
+                // Event delegation for hover events
+                propertyInfo.addEventListener('mouseenter', (e) => {
+                    const heading = e.target.closest('h4');
+                    if (!heading) return;
+
+                    const headingText = heading.textContent.trim();
+                    const block = heading.closest('.property-detail-block');
+                    const blockIndex = Array.from(propertyInfo.querySelectorAll('.property-detail-block')).indexOf(block);
+                    const popup = card.querySelector(`[data-heading-id="popup-${cardIndex}-${blockIndex}-${headingText.replace(/\s+/g, '-')}"`);
+
+                    if (popup) {
+                        console.log(`Showing popup for card ${cardIndex}, heading: ${headingText}`);
+                        popup.style.display = 'block';
+                        const rect = heading.getBoundingClientRect();
+                        const viewportWidth = window.innerWidth;
+                        const popupWidth = 250;
+                        const popupHeight = popup.offsetHeight || 300;
+                        let left = rect.right + window.scrollX; // Aligns popup’s left edge with h4’s right edge
+                        let top = rect.top + window.scrollY + (rect.height / 2) - (popupHeight / 2);
+
+                        if (left + popupWidth > viewportWidth) {
+                            left = rect.left + window.scrollX - popupWidth - 2; // Accounts for 1px border on each side
+                        }
+
+                        if (top + popupHeight > window.innerHeight + window.scrollY) {
+                            top = window.innerHeight + window.scrollY - popupHeight - 2;
+                        } else if (top < window.scrollY) {
+                            top = window.scrollY + 2;
+                        }
+
+                        popup.style.top = `${top}px`;
+                        popup.style.left = `${left}px`;
+                    }
+                }, true); // Use capture to ensure h4 events are caught first
+
+                propertyInfo.addEventListener('mouseleave', (e) => {
+                    const heading = e.target.closest('h4');
+                    if (!heading) return;
+
+                    const headingText = heading.textContent.trim();
+                    const block = heading.closest('.property-detail-block');
+                    const blockIndex = Array.from(propertyInfo.querySelectorAll('.property-detail-block')).indexOf(block);
+                    const popup = card.querySelector(`[data-heading-id="popup-${cardIndex}-${blockIndex}-${headingText.replace(/\s+/g, '-')}"`);
+
+                    if (popup) {
+                        console.log(`Hiding popup for card ${cardIndex}, heading: ${headingText}`);
+                        popup.style.display = 'none';
+                    }
+                }, true);
+            });
+
+            // Cleanup popups on page unload to prevent memory leaks
+            window.addEventListener('unload', () => {
+                popups.forEach(popup => popup.remove());
             });
 
             // Chat modal elements
@@ -1329,53 +1541,90 @@
             <img src="{{ property.profile_picture | default('/static/default.jpg') }}" alt="Profile Picture" class="property-image">
             <div class="property-info">
                 <h3>{{ property.name | default('Unnamed Property') }}</h3>
-                <p><strong>Type:</strong> {{ property.type | default('') }}</p>
-                <p><strong>Features:</strong></p>
-                <ul>
-                    {% for item in property.features %}
-                        <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }})</li>
-                    {% endfor %}
-                </ul>
-                <p><strong>Address:</strong> {{ property.location_address | default('') }}<br>{{ property.property_address | default('') }}</p>
-                <p><strong>Amenities:</strong> {{ property.amenities | default('') }}</p>
-                <div class="input-with-copy">
-                    <p><strong>Phone:</strong> {{ property.phone | default('') }}</p>
-                    <span class="copy-icon" data-copy="{{ property.phone | default('') }}">📋</span>
+                <div class="property-detail-block">
+                    <h4>Type</h4>
+                    <p>{{ property.type | default('') }}</p>
                 </div>
-                <div class="input-with-copy">
-                    <p><strong>Email:</strong> {{ property.email | default('') }}</p>
-                    <span class="copy-icon" data-copy="{{ property.email | default('') }}">📋</span>
-                </div>
-                <p><strong>Description:</strong> {{ property.description | default('') }}</p>
-                <p><strong>Location:</strong> {{ property.location | default('') }}</p>
-                <p><strong>Sub-county:</strong> {{ property.sub_county | default('') }}</p>
-                <p><strong>Landmarks:</strong> {{ property.landmarks | default('') }}</p>
-                <p><strong>Availability:</strong> {{ property.availability | default('') }}</p>
-                <p><strong>Status:</strong> {{ property.status | default('') }}</p>
-                {% if property.media %}
-                <p><strong>Media:</strong></p>
-                <div class="media-gallery">
-                    {% for media in property.media %}
-                        {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
-                            <video class="media-item" muted loop>
-                                <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
-                                Your browser does not support the video tag.
-                            </video>
-                        {% else %}
-                            <img src="{{ media }}" alt="Property Media" class="media-item">
-                        {% endif %}
-                    {% endfor %}
-                    {% if property.media|length > 1 %}
-                    <div class="slideshow-nav">
-                        <button class="prev">❮</button>
-                        <button class="next">❯</button>
-                    </div>
-                    <div class="dots-container">
-                        {% for media in property.media %}
-                            <span class="dot"></span>
+                <div class="property-detail-block">
+                    <h4>Features</h4>
+                    <ul>
+                        {% for item in property.features %}
+                            <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }})</li>
                         {% endfor %}
+                    </ul>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Address</h4>
+                    <p>{{ property.location_address | default('') }}<br>{{ property.property_address | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Amenities</h4>
+                    <p>{{ property.amenities | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Phone</h4>
+                    <div class="input-with-copy">
+                        <p>{{ property.phone | default('') }}</p>
+                        <span class="copy-icon" data-copy="{{ property.phone | default('') }}">📋</span>
                     </div>
-                    {% endif %}
+                </div>
+                <div class="property-detail-block">
+                    <h4>Email</h4>
+                    <div class="input-with-copy">
+                        <p>{{ property.email | default('') }}</p>
+                        <span class="copy-icon" data-copy="{{ property.email | default('') }}">📋</span>
+                    </div>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Description</h4>
+                    <p>{{ property.description | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Location</h4>
+                    <p>{{ property.location | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Sub-county</h4>
+                    <p>{{ property.sub_county | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Landmarks</h4>
+                    <p>{{ property.landmarks | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Availability</h4>
+                    <p>{{ property.availability | default('') }}</p>
+                </div>
+                <div class="property-detail-block">
+                    <h4>Status</h4>
+                    <p>{{ property.status | default('') }}</p>
+                </div>
+                {% if property.media %}
+                <div class="property-detail-block">
+                    <h4>Media</h4>
+                    <div class="media-gallery">
+                        {% for media in property.media %}
+                            {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
+                                <video class="media-item" muted loop>
+                                    <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <img src="{{ media }}" alt="Property Media" class="media-item">
+                            {% endif %}
+                        {% endfor %}
+                        {% if property.media|length > 1 %}
+                        <div class="slideshow-nav">
+                            <button class="prev">❮</button>
+                            <button class="next">❯</button>
+                        </div>
+                        <div class="dots-container">
+                            {% for media in property.media %}
+                                <span class="dot"></span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endif %}
                 <div class="action-buttons">
