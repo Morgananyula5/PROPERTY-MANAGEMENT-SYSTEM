@@ -33,21 +33,22 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 20px;
             padding: 20px;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         .property-card {
             background-color: #007BCE;
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             overflow: visible;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             animation: slideUp 0.5s ease-out;
+            min-width: 340px;
         }
 
         .property-card:hover {
@@ -56,18 +57,22 @@
         }
 
         .property-image {
-            width: 100%;
-            height: 180px;
-            object-fit: contain;
-            border-radius: 10px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
             border: 2px solid #4AB3F4;
-            transition: transform 0.3s ease;
-            cursor: pointer;
             background: #FFFFFF;
+            display: block;
+            margin: 0 auto 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .property-card:hover .property-image {
-            transform: scale(1.03);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(29, 161, 242, 0.5);
         }
 
         .media-gallery {
@@ -79,20 +84,32 @@
             border-radius: 8px;
             border: 2px solid #4AB3F4;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            pointer-events: auto; /* Ensure media gallery is clickable */
+            z-index: 1;
         }
 
         .media-item {
             width: 100%;
             height: 100%;
-            object-fit: contain;
             display: none;
             border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
             cursor: pointer;
         }
 
         .media-item.active {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
         }
 
         .slideshow-nav {
@@ -102,6 +119,8 @@
             display: flex;
             justify-content: space-between;
             transform: translateY(-50%);
+            z-index: 4;
+            pointer-events: none;
         }
 
         .slideshow-nav .prev, .slideshow-nav .next {
@@ -119,6 +138,7 @@
             justify-content: center;
             transition: background 0.3s ease, transform 0.3s ease;
             opacity: 0.8;
+            pointer-events: auto;
         }
 
         .slideshow-nav .prev:hover, .slideshow-nav .next:hover {
@@ -130,6 +150,8 @@
         .dots-container {
             text-align: center;
             margin-top: 8px;
+            z-index: 4;
+            position: relative;
         }
 
         .dot {
@@ -141,6 +163,7 @@
             border-radius: 50%;
             display: inline-block;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            pointer-events: auto;
         }
 
         .dot.active, .dot:hover {
@@ -148,7 +171,7 @@
             transform: scale(1.1);
         }
 
-        .fullscreen-media-overlay {
+        .fullscreen-media-overlay, .hover-media-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -157,6 +180,18 @@
             background: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             display: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .hover-media-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hover-media-overlay.show {
+            opacity: 1;
         }
 
         .fullscreen-media-modal {
@@ -175,9 +210,35 @@
             display: none;
             flex-direction: column;
             overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .fullscreen-media-content {
+        .hover-media-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 80vw;
+            height: 80vh;
+            max-width: 1000px;
+            max-height: 600px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1501;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .hover-media-modal.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .fullscreen-media-content, .hover-media-content {
             width: 100%;
             height: 100%;
             display: flex;
@@ -185,23 +246,27 @@
             justify-content: center;
         }
 
-        .fullscreen-media-content img, .fullscreen-media-content video {
+        .fullscreen-media-content img, .fullscreen-media-content video,
+        .hover-media-content img, .hover-media-content video {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
             border-radius: 8px;
         }
 
-        .fullscreen-nav {
+        .fullscreen-nav, .hover-nav {
             position: absolute;
             top: 50%;
             width: 100%;
             display: flex;
             justify-content: space-between;
             transform: translateY(-50%);
+            z-index: 1502;
+            pointer-events: none;
         }
 
-        .fullscreen-nav .prev, .fullscreen-nav .next {
+        .fullscreen-nav .prev, .fullscreen-nav .next,
+        .hover-nav .prev, .hover-nav .next {
             background: linear-gradient(135deg, #1DA1F2, #66BFFF);
             color: #FFFFFF;
             border: none;
@@ -216,15 +281,17 @@
             justify-content: center;
             transition: background 0.3s ease, transform 0.3s ease;
             opacity: 0.8;
+            pointer-events: auto;
         }
 
-        .fullscreen-nav .prev:hover, .fullscreen-nav .next:hover {
+        .fullscreen-nav .prev:hover, .fullscreen-nav .next:hover,
+        .hover-nav .prev:hover, .hover-nav .next:hover {
             background: linear-gradient(135deg, #4AB3F4, #80CCFF);
             transform: scale(1.1);
             opacity: 1;
         }
 
-        .close-fullscreen-btn {
+        .close-fullscreen-btn, .close-hover-btn {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -242,18 +309,46 @@
             justify-content: center;
             transition: background 0.3s ease, transform 0.3s ease;
             opacity: 0.8;
+            z-index: 1502;
+            pointer-events: auto;
         }
 
-        .close-fullscreen-btn:hover {
+        .close-fullscreen-btn:hover, .close-hover-btn:hover {
             background: linear-gradient(135deg, #4AB3F4, #80CCFF);
             transform: scale(1.1);
             opacity: 1;
         }
 
+        .hover-dots-container {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 1502;
+        }
+
+        .hover-dot {
+            cursor: pointer;
+            height: 10px;
+            width: 10px;
+            margin: 0 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .hover-dot.active, .hover-dot:hover {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            transform: scale(1.1);
+        }
+
         .property-info {
-            padding: 15px;
+            padding: 20px;
             font-size: 1.1em;
             color: #E1E8ED;
+            width: 100%;
         }
 
         .property-info h3 {
@@ -268,10 +363,13 @@
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid #4AB3F4;
             border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             position: relative;
+            min-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .property-detail-block:hover {
@@ -286,48 +384,53 @@
             background: linear-gradient(135deg, #1DA1F2, #66BFFF);
             padding: 8px;
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             cursor: pointer;
             position: relative;
             transition: background 0.3s ease;
-            pointer-events: auto; /* Ensure h4 captures hover events */
+            pointer-events: auto;
         }
 
         .property-detail-block h4:hover {
             background: linear-gradient(135deg, #4AB3F4, #80CCFF);
         }
 
-        .property-detail-block p, .property-detail-block ul, .property-detail-block .input-with-copy, .property-detail-block .media-gallery {
-            pointer-events: none; /* Prevent child elements from stealing hover events */
-        }
-
-        .property-detail-block p {
-            margin: 5px 0;
-            line-height: 1.4;
-            color: #E1E8ED;
+        .property-detail-block p, .property-detail-block ul, .property-detail-block .input-with-copy {
+            pointer-events: none;
+            font-size: 1em;
+            line-height: 1.6;
+            word-wrap: break-word;
+            text-align: left;
         }
 
         .property-detail-block ul {
-            list-style: none;
-            margin: 8px 0;
+            list-style: disc inside;
             padding-left: 10px;
+            margin: 10px 0;
         }
 
         .property-detail-block li {
             margin: 5px 0;
-            font-size: 1em;
-            color: #FFFFFF;
+            padding-left: 10px;
         }
 
         .input-with-copy {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 5px 0;
-            flex-wrap: wrap;
-            word-break: break-all;
+            gap: 12px;
+            margin: 10px 0;
+            min-width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .input-with-copy p {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .copy-icon {
@@ -335,7 +438,8 @@
             font-size: 1.2em;
             color: #4AB3F4;
             transition: color 0.3s ease, transform 0.3s ease;
-            pointer-events: auto; /* Allow clicking copy icon */
+            pointer-events: auto;
+            flex-shrink: 0;
         }
 
         .copy-icon:hover {
@@ -345,14 +449,14 @@
 
         .detail-popup {
             position: fixed;
-            width: 250px;
-            max-height: 300px;
+            width: 320px;
+            max-height: 350px;
             background: #FFFFFF;
             color: #14171A;
-            border: 0; /* Removed border to minimize gap */
+            border: 0;
             border-radius: 8px;
-            padding: 5px; /* Reduced padding */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtler shadow */
+            padding: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 20000;
             display: none;
             overflow-y: auto;
@@ -370,7 +474,7 @@
 
         .detail-popup p, .detail-popup ul {
             font-size: 0.95em;
-            line-height: 1.5;
+            line-height: 1.6;
             color: #14171A;
             text-align: left;
         }
@@ -845,9 +949,12 @@
             }
             .property-card {
                 width: 100%;
+                padding: 15px;
             }
             .property-image {
-                height: 160px;
+                width: 100px;
+                height: 100px;
+                margin: 0 auto 8px;
             }
             .media-gallery {
                 height: 150px;
@@ -866,12 +973,19 @@
                 width: 95vw;
                 height: 95vh;
             }
-            .fullscreen-nav .prev, .fullscreen-nav .next {
+            .hover-media-modal {
+                width: 70vw;
+                height: 70vh;
+                max-width: 400px;
+                max-height: 300px;
+            }
+            .fullscreen-nav .prev, .fullscreen-nav .next,
+            .hover-nav .prev, .hover-nav .next {
                 width: 32px;
                 height: 32px;
                 font-size: 20px;
             }
-            .close-fullscreen-btn {
+            .close-fullscreen-btn, .close-hover-btn {
                 width: 32px;
                 height: 32px;
                 font-size: 18px;
@@ -918,17 +1032,32 @@
                 font-size: 0.8em;
             }
             .property-detail-block {
-                padding: 10px;
+                padding: 15px;
+                margin-bottom: 12px;
             }
             .property-detail-block h4 {
                 font-size: 1.1em;
                 padding: 6px;
             }
+            .property-detail-block p, .property-detail-block ul, .property-detail-block .input-with-copy {
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+            .property-detail-block ul {
+                padding-left: 8px;
+            }
+            .property-detail-block li {
+                padding-left: 8px;
+            }
+            .input-with-copy {
+                gap: 8px;
+                margin: 8px 0;
+            }
             .detail-popup {
-                width: 200px;
-                max-height: 250px;
-                padding: 5px; /* Match reduced padding */
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Match subtler shadow */
+                width: 260px;
+                max-height: 280px;
+                padding: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                 z-index: 20000;
                 pointer-events: none;
             }
@@ -952,6 +1081,36 @@
             fullscreenOverlay.classList.add('fullscreen-media-overlay');
             document.body.appendChild(fullscreenOverlay);
 
+            // Hover media modal elements
+            const hoverModal = document.createElement('div');
+            hoverModal.classList.add('hover-media-modal');
+            hoverModal.innerHTML = `
+                <div class="hover-media-content"></div>
+                <div class="hover-nav">
+                    <button class="prev">❮</button>
+                    <button class="next">❯</button>
+                </div>
+                <div class="hover-dots-container"></div>
+                <button class="close-hover-btn">✖</button>
+            `;
+            document.body.appendChild(hoverModal);
+            const hoverOverlay = document.createElement('div');
+            hoverOverlay.classList.add('hover-media-overlay');
+            document.body.appendChild(hoverOverlay);
+
+            // Debounce utility function
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
             // Initialize slideshow for each property card
             document.querySelectorAll('.media-gallery').forEach(gallery => {
                 const mediaItems = gallery.querySelectorAll('.media-item');
@@ -972,36 +1131,33 @@
                     }
 
                     if (prevBtn) {
-                        prevBtn.addEventListener('click', () => {
-                            clearInterval(autoSlide);
-                            showMedia(currentIndex - 1);
-                            startSlideInterval();
+                        prevBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showMedia((currentIndex - 1 + mediaItems.length) % mediaItems.length);
                         });
                     }
 
                     if (nextBtn) {
-                        nextBtn.addEventListener('click', () => {
-                            clearInterval(autoSlide);
-                            showMedia(currentIndex + 1);
-                            startSlideInterval();
+                        nextBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showMedia((currentIndex + 1) % mediaItems.length);
                         });
                     }
 
                     if (dotsContainer) {
                         const dots = dotsContainer.querySelectorAll('.dot');
                         dots.forEach((dot, index) => {
-                            dot.addEventListener('click', () => {
-                                clearInterval(autoSlide);
+                            dot.addEventListener('click', (e) => {
+                                e.stopPropagation();
                                 showMedia(index);
-                                startSlideInterval();
                             });
                         });
                     }
 
                     function showMedia(index) {
-                        const currentVideo = mediaItems[currentIndex].querySelector('video');
-                        if (currentVideo) {
-                            currentVideo.pause();
+                        const currentMedia = mediaItems[currentIndex].querySelector('video, img');
+                        if (currentMedia.tagName === 'VIDEO') {
+                            currentMedia.pause();
                         }
 
                         currentIndex = (index + mediaItems.length) % mediaItems.length;
@@ -1009,9 +1165,9 @@
                         mediaItems.forEach(item => item.classList.remove('active'));
                         mediaItems[currentIndex].classList.add('active');
 
-                        const newVideo = mediaItems[currentIndex].querySelector('video');
-                        if (newVideo) {
-                            newVideo.play().catch(error => console.log('Video play failed:', error));
+                        const newMedia = mediaItems[currentIndex].querySelector('video, img');
+                        if (newMedia.tagName === 'VIDEO') {
+                            newMedia.play().catch(error => console.log('Video play failed:', error));
                         }
 
                         if (dotsContainer) {
@@ -1022,28 +1178,244 @@
                     }
 
                     function startSlideInterval() {
+                        if (autoSlide) clearInterval(autoSlide);
                         autoSlide = setInterval(() => {
-                            showMedia(currentIndex + 1);
+                            if (hoverModal.style.display !== 'flex') {
+                                showMedia((currentIndex + 1) % mediaItems.length);
+                            }
                         }, 5000);
                     }
 
-                    mediaItems.forEach((item, index) => {
-                        item.addEventListener('click', () => {
-                            clearInterval(autoSlide);
+                    // Hover modal state
+                    let currentHoverMediaList = [];
+                    let hoverIndex = 0;
+                    let isHoverModalOpen = false;
+                    let touchStartX = 0;
+                    let hoverAutoSlide;
+
+                    // Debounced hover handlers
+                    const openHoverDebounced = debounce((e) => {
+                        if (isHoverModalOpen) return;
+                        isHoverModalOpen = true;
+                        clearInterval(autoSlide); // Pause gallery slideshow
+
+                        const propertyCard = gallery.closest('.property-card');
+                        const profilePicture = propertyCard.querySelector('.property-image').src;
+                        currentHoverMediaList = Array.from(mediaItems).map(m => {
+                            const video = m.querySelector('video');
+                            return video ? null : m.querySelector('img').src;
+                        }).filter(url => url);
+                        currentHoverMediaList.unshift(profilePicture);
+                        hoverIndex = currentIndex + 1; // Start with current gallery image
+                        openHoverModal(currentHoverMediaList, hoverIndex);
+                    }, 100);
+
+                    // Hover event handling
+                    gallery.addEventListener('mouseenter', (e) => {
+                        if (e.target === gallery) {
+                            e.stopPropagation();
+                            openHoverDebounced(e);
+                        }
+                    });
+
+                    gallery.addEventListener('mouseleave', (e) => {
+                        if (e.target === gallery) {
+                            e.stopPropagation();
+                            if (isHoverModalOpen) {
+                                closeHoverModal();
+                                isHoverModalOpen = false;
+                                if (mediaItems.length > 1) {
+                                    startSlideInterval();
+                                }
+                            }
+                        }
+                    });
+
+                    hoverModal.addEventListener('mouseenter', () => {
+                        // Keep modal open
+                    });
+
+                    hoverModal.addEventListener('mouseleave', (e) => {
+                        if (isHoverModalOpen && !gallery.contains(e.relatedTarget)) {
+                            e.stopPropagation();
+                            closeHoverModal();
+                            isHoverModalOpen = false;
+                            if (mediaItems.length > 1) {
+                                startSlideInterval();
+                            }
+                        }
+                    });
+
+                    hoverOverlay.addEventListener('click', (e) => {
+                        if (isHoverModalOpen) {
+                            e.stopPropagation();
+                            closeHoverModal();
+                            isHoverModalOpen = false;
+                            if (mediaItems.length > 1) {
+                                startSlideInterval();
+                            }
+                        }
+                    });
+
+                    mediaItems.forEach((media, index) => {
+                        media.addEventListener('click', (e) => {
+                            e.stopPropagation();
                             const propertyCard = gallery.closest('.property-card');
                             const profilePicture = propertyCard.querySelector('.property-image').src;
-                            const mediaList = [profilePicture, ...Array.from(mediaItems).map(m => m.tagName === 'VIDEO' ? m.querySelector('source').src : m.src)];
-                            openFullscreenModal(mediaList, index + 1, gallery, startSlideInterval);
+                            const mediaList = Array.from(mediaItems).map(m => {
+                                const video = m.querySelector('video');
+                                return video ? m.querySelector('source').src : m.querySelector('img').src;
+                            });
+                            mediaList.unshift(profilePicture);
+                            openFullscreenModal(mediaList, index + 1, gallery);
                         });
                     });
 
                     const profileImage = gallery.closest('.property-card').querySelector('.property-image');
                     if (profileImage) {
                         profileImage.addEventListener('click', () => {
-                            clearInterval(autoSlide);
-                            const mediaList = [profileImage.src, ...Array.from(mediaItems).map(m => m.tagName === 'VIDEO' ? m.querySelector('source').src : m.src)];
-                            openFullscreenModal(mediaList, 0, gallery, startSlideInterval);
+                            const mediaList = Array.from(mediaItems).map(m => {
+                                const video = m.querySelector('video');
+                                return video ? m.querySelector('source').src : m.querySelector('img').src;
+                            });
+                            mediaList.unshift(profileImage.src);
+                            openFullscreenModal(mediaList, 0, gallery);
                         });
+                    }
+
+                    function openHoverModal(mediaList, index) {
+                        currentHoverMediaList = mediaList.filter(url => url && !url.endsWith('.mp4') && !url.endsWith('.webm') && !url.endsWith('.ogg'));
+                        hoverIndex = index % currentHoverMediaList.length;
+                        if (currentHoverMediaList.length === 0) {
+                            console.error('No valid image URLs found for hover modal');
+                            return;
+                        }
+                        hoverModal.style.display = 'flex';
+                        hoverOverlay.style.display = 'block';
+                        hoverModal.classList.add('show');
+                        hoverOverlay.classList.add('show');
+                        showHoverMedia(hoverIndex);
+
+                        const dotsContainer = hoverModal.querySelector('.hover-dots-container');
+                        dotsContainer.innerHTML = '';
+                        currentHoverMediaList.forEach((_, i) => {
+                            const dot = document.createElement('span');
+                            dot.classList.add('hover-dot');
+                            if (i === hoverIndex) {
+                                dot.classList.add('active');
+                            }
+                            dot.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                clearInterval(hoverAutoSlide);
+                                showHoverMedia(i);
+                                startHoverSlideInterval();
+                            });
+                            dotsContainer.appendChild(dot);
+                        });
+
+                        if (currentHoverMediaList.length > 1) {
+                            startHoverSlideInterval();
+                        }
+
+                        const closeBtn = hoverModal.querySelector('.close-hover-btn');
+                        closeBtn.removeEventListener('click', closeHoverModal);
+                        closeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            closeHoverModal();
+                            isHoverModalOpen = false;
+                            if (mediaItems.length > 1) {
+                                startSlideInterval();
+                            }
+                        });
+
+                        const prevBtn = hoverModal.querySelector('.hover-nav .prev');
+                        const nextBtn = hoverModal.querySelector('.hover-nav .next');
+                        prevBtn.removeEventListener('click', showPrevHoverMedia);
+                        nextBtn.removeEventListener('click', showNextHoverMedia);
+                        prevBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            clearInterval(hoverAutoSlide);
+                            showPrevHoverMedia(e);
+                            startHoverSlideInterval();
+                        });
+                        nextBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            clearInterval(hoverAutoSlide);
+                            showNextHoverMedia(e);
+                            startHoverSlideInterval();
+                        });
+
+                        hoverModal.removeEventListener('touchstart', handleHoverTouchStart);
+                        hoverModal.removeEventListener('touchend', handleHoverTouchEnd);
+                        hoverModal.addEventListener('touchstart', handleHoverTouchStart);
+                        hoverModal.addEventListener('touchend', handleHoverTouchEnd);
+                    }
+
+                    function showHoverMedia(index) {
+                        hoverIndex = index % currentHoverMediaList.length;
+                        const mediaContent = hoverModal.querySelector('.hover-media-content');
+                        const mediaUrl = currentHoverMediaList[hoverIndex];
+                        if (!mediaUrl) {
+                            console.error('Invalid image URL at index:', hoverIndex);
+                            mediaContent.innerHTML = '<p>Error: Invalid image URL</p>';
+                            return;
+                        }
+                        mediaContent.innerHTML = `<img src="${mediaUrl}" alt="Hover Media">`;
+
+                        const dots = hoverModal.querySelectorAll('.hover-dot');
+                        dots.forEach(dot => dot.classList.remove('active'));
+                        if (dots[hoverIndex]) {
+                            dots[hoverIndex].classList.add('active');
+                        }
+
+                        const hoverNav = hoverModal.querySelector('.hover-nav');
+                        hoverNav.style.display = currentHoverMediaList.length > 1 ? 'flex' : 'none';
+                    }
+
+                    function closeHoverModal() {
+                        clearInterval(hoverAutoSlide);
+                        hoverModal.style.display = 'none';
+                        hoverOverlay.style.display = 'none';
+                        hoverModal.classList.remove('show');
+                        hoverOverlay.classList.remove('show');
+                        isHoverModalOpen = false;
+                    }
+
+                    function showPrevHoverMedia(e) {
+                        showHoverMedia((hoverIndex - 1 + currentHoverMediaList.length) % currentHoverMediaList.length);
+                    }
+
+                    function showNextHoverMedia(e) {
+                        showHoverMedia((hoverIndex + 1) % currentHoverMediaList.length);
+                    }
+
+                    function startHoverSlideInterval() {
+                        if (hoverAutoSlide) clearInterval(hoverAutoSlide);
+                        if (currentHoverMediaList.length > 1) {
+                            hoverAutoSlide = setInterval(() => {
+                                if (hoverModal.style.display === 'flex') {
+                                    showHoverMedia((hoverIndex + 1) % currentHoverMediaList.length);
+                                }
+                            }, 3000);
+                        }
+                    }
+
+                    function handleHoverTouchStart(e) {
+                        touchStartX = e.changedTouches[0].screenX;
+                    }
+
+                    function handleHoverTouchEnd(e) {
+                        const touchEndX = e.changedTouches[0].screenX;
+                        const swipeDistance = touchEndX - touchStartX;
+                        if (swipeDistance > 50) {
+                            clearInterval(hoverAutoSlide);
+                            showHoverMedia((hoverIndex - 1 + currentHoverMediaList.length) % currentHoverMediaList.length);
+                            startHoverSlideInterval();
+                        } else if (swipeDistance < -50) {
+                            clearInterval(hoverAutoSlide);
+                            showHoverMedia((hoverIndex + 1) % currentHoverMediaList.length);
+                            startHoverSlideInterval();
+                        }
                     }
                 }
             });
@@ -1053,42 +1425,45 @@
             let currentMediaIndex = 0;
             let touchStartX = 0;
 
-            function openFullscreenModal(mediaList, index, gallery, restartSlideInterval) {
-                currentMediaList = mediaList;
-                currentMediaIndex = index % mediaList.length;
+            function openFullscreenModal(mediaList, index, gallery) {
+                currentMediaList = mediaList.filter(url => url && url !== '');
+                currentMediaIndex = index % currentMediaList.length;
+                if (currentMediaList.length === 0) {
+                    console.error('No valid media URLs found for fullscreen modal');
+                    return;
+                }
                 fullscreenModal.style.display = 'flex';
                 fullscreenOverlay.style.display = 'block';
                 showFullscreenMedia(currentMediaIndex);
 
-                fullscreenModal.querySelector('.close-fullscreen-btn').addEventListener('click', () => {
-                    closeFullscreenModal(gallery, restartSlideInterval);
-                });
+                const closeBtn = fullscreenModal.querySelector('.close-fullscreen-btn');
+                closeBtn.removeEventListener('click', closeFullscreenModal);
+                closeBtn.addEventListener('click', closeFullscreenModal);
 
-                fullscreenOverlay.addEventListener('click', () => {
-                    closeFullscreenModal(gallery, restartSlideInterval);
-                });
+                fullscreenOverlay.removeEventListener('click', closeFullscreenModal);
+                fullscreenOverlay.addEventListener('click', closeFullscreenModal);
 
-                fullscreenModal.querySelector('.fullscreen-nav .prev').addEventListener('click', () => {
+                const prevBtn = fullscreenModal.querySelector('.fullscreen-nav .prev');
+                const nextBtn = fullscreenModal.querySelector('.fullscreen-nav .next');
+                prevBtn.removeEventListener('click', showPrevFullscreenMedia);
+                nextBtn.removeEventListener('click', showNextFullscreenMedia);
+                prevBtn.addEventListener('click', showPrevFullscreenMedia);
+                nextBtn.addEventListener('click', showNextFullscreenMedia);
+
+                fullscreenModal.removeEventListener('touchstart', handleTouchStart);
+                fullscreenModal.removeEventListener('touchend', handleTouchEnd);
+                fullscreenModal.addEventListener('touchstart', handleTouchStart);
+                fullscreenModal.addEventListener('touchend', handleTouchEnd);
+
+                function showPrevFullscreenMedia(e) {
+                    e.stopPropagation();
                     showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
-                });
+                }
 
-                fullscreenModal.querySelector('.fullscreen-nav .next').addEventListener('click', () => {
+                function showNextFullscreenMedia(e) {
+                    e.stopPropagation();
                     showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
-                });
-
-                fullscreenModal.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                });
-
-                fullscreenModal.addEventListener('touchend', (e) => {
-                    const touchEndX = e.changedTouches[0].screenX;
-                    const swipeDistance = touchEndX - touchStartX;
-                    if (swipeDistance > 50) {
-                        showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
-                    } else if (swipeDistance < -50) {
-                        showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
-                    }
-                });
+                }
             }
 
             function showFullscreenMedia(index) {
@@ -1096,6 +1471,12 @@
                 const mediaContent = fullscreenModal.querySelector('.fullscreen-media-content');
                 const mediaUrl = currentMediaList[currentMediaIndex];
                 mediaContent.innerHTML = '';
+
+                if (!mediaUrl) {
+                    console.error('Invalid media URL at index:', currentMediaIndex);
+                    mediaContent.innerHTML = '<p>Error: Invalid media URL</p>';
+                    return;
+                }
 
                 if (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm') || mediaUrl.endsWith('.ogg')) {
                     mediaContent.innerHTML = `
@@ -1109,26 +1490,36 @@
                 }
 
                 const fullscreenNav = fullscreenModal.querySelector('.fullscreen-nav');
-                if (currentMediaIndex === 0) {
-                    fullscreenNav.style.display = 'none';
-                } else {
-                    fullscreenNav.style.display = 'flex';
-                }
+                fullscreenNav.style.display = currentMediaList.length > 1 ? 'flex' : 'none';
             }
 
-            function closeFullscreenModal(gallery, restartSlideInterval) {
+            function closeFullscreenModal() {
                 fullscreenModal.style.display = 'none';
                 fullscreenOverlay.style.display = 'none';
                 const currentVideo = fullscreenModal.querySelector('video');
                 if (currentVideo) {
                     currentVideo.pause();
                 }
-                restartSlideInterval();
+            }
+
+            function handleTouchStart(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }
+
+            function handleTouchEnd(e) {
+                const touchEndX = e.changedTouches[0].screenX;
+                const swipeDistance = touchEndX - touchStartX;
+                if (swipeDistance > 50) {
+                    showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
+                } else if (swipeDistance < -50) {
+                    showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
+                }
             }
 
             // Copy functionality
             document.querySelectorAll('.copy-icon').forEach(icon => {
-                icon.addEventListener('click', () => {
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const text = icon.getAttribute('data-copy');
                     navigator.clipboard.writeText(text).then(() => {
                         alert(`Copied: ${text}`);
@@ -1139,7 +1530,7 @@
             });
 
             // Popup functionality for property detail headings with event delegation
-            const popups = []; // Store popups for cleanup
+            const popups = [];
 
             document.querySelectorAll('.property-card').forEach((card, cardIndex) => {
                 const propertyInfo = card.querySelector('.property-info');
@@ -1148,7 +1539,6 @@
                     return;
                 }
 
-                // Create popups for all h4 elements within this card
                 propertyInfo.querySelectorAll('.property-detail-block').forEach((block, blockIndex) => {
                     const heading = block.querySelector('h4');
                     if (!heading) {
@@ -1160,15 +1550,11 @@
                     const popup = document.createElement('div');
                     popup.classList.add('detail-popup');
                     popup.setAttribute('data-heading-id', `popup-${cardIndex}-${blockIndex}-${headingText.replace(/\s+/g, '-')}`);
-                    popups.push(popup); // Store popup for cleanup
+                    popups.push(popup);
 
-                    // Find content element within the block
                     let contentElement = block.querySelector('p, ul, .input-with-copy, .media-gallery');
                     let popupContent = '';
 
-                    console.log(`Processing card ${cardIndex}, heading: ${headingText}, contentElement:`, contentElement);
-
-                    // Handle different content types
                     if (!contentElement) {
                         popupContent = `<h5>${headingText}</h5><p>No details available</p>`;
                     } else if (contentElement.classList.contains('media-gallery')) {
@@ -1187,11 +1573,9 @@
                     }
 
                     popup.innerHTML = popupContent;
-                    card.appendChild(popup); // Append to card to maintain stacking context
-                    console.log(`Popup created for card ${cardIndex}, heading: ${headingText}:`, popupContent);
+                    card.appendChild(popup);
                 });
 
-                // Event delegation for hover events
                 propertyInfo.addEventListener('mouseenter', (e) => {
                     const heading = e.target.closest('h4');
                     if (!heading) return;
@@ -1202,17 +1586,16 @@
                     const popup = card.querySelector(`[data-heading-id="popup-${cardIndex}-${blockIndex}-${headingText.replace(/\s+/g, '-')}"`);
 
                     if (popup) {
-                        console.log(`Showing popup for card ${cardIndex}, heading: ${headingText}`);
                         popup.style.display = 'block';
                         const rect = heading.getBoundingClientRect();
                         const viewportWidth = window.innerWidth;
-                        const popupWidth = 250;
-                        const popupHeight = popup.offsetHeight || 300;
-                        let left = rect.right + window.scrollX; // Aligns popup’s left edge with h4’s right edge
+                        const popupWidth = 320;
+                        const popupHeight = popup.offsetHeight || 350;
+                        let left = rect.right + window.scrollX;
                         let top = rect.top + window.scrollY + (rect.height / 2) - (popupHeight / 2);
 
                         if (left + popupWidth > viewportWidth) {
-                            left = rect.left + window.scrollX - popupWidth - 2; // Accounts for 1px border on each side
+                            left = rect.left + window.scrollX - popupWidth - 2;
                         }
 
                         if (top + popupHeight > window.innerHeight + window.scrollY) {
@@ -1224,7 +1607,7 @@
                         popup.style.top = `${top}px`;
                         popup.style.left = `${left}px`;
                     }
-                }, true); // Use capture to ensure h4 events are caught first
+                }, true);
 
                 propertyInfo.addEventListener('mouseleave', (e) => {
                     const heading = e.target.closest('h4');
@@ -1236,13 +1619,11 @@
                     const popup = card.querySelector(`[data-heading-id="popup-${cardIndex}-${blockIndex}-${headingText.replace(/\s+/g, '-')}"`);
 
                     if (popup) {
-                        console.log(`Hiding popup for card ${cardIndex}, heading: ${headingText}`);
                         popup.style.display = 'none';
                     }
                 }, true);
             });
 
-            // Cleanup popups on page unload to prevent memory leaks
             window.addEventListener('unload', () => {
                 popups.forEach(popup => popup.remove());
             });
@@ -1266,7 +1647,6 @@
             const chatInputArea = document.querySelector('.chat-input-area');
             const chatHeaderTitle = document.querySelector('.chat-header h2');
 
-            // Function to show conversation list
             function showConversationList() {
                 chatHeaderTitle.textContent = 'Inbox';
                 conversationList.style.display = 'block';
@@ -1276,7 +1656,6 @@
                 fetchConversations();
             }
 
-            // Function to show chat messages
             function showChatMessages(propertyId, propertyName) {
                 chatHeaderTitle.textContent = `Chat with ${propertyName}`;
                 conversationList.style.display = 'none';
@@ -1291,7 +1670,6 @@
                 messagePollingInterval = setInterval(() => fetchMessages(propertyId), 5000);
             }
 
-            // Function to fetch conversations
             let messagePollingInterval;
             function fetchConversations() {
                 fetch('/get_conversations', {
@@ -1329,7 +1707,8 @@
                             });
 
                             document.querySelectorAll('.open-conversation-btn').forEach(btn => {
-                                btn.addEventListener('click', () => {
+                                btn.addEventListener('click', (e) => {
+                                    e.stopPropagation();
                                     const propertyId = btn.getAttribute('data-property-id');
                                     const propertyName = btn.getAttribute('data-property-name');
                                     showChatMessages(propertyId, propertyName);
@@ -1346,7 +1725,6 @@
                 });
             }
 
-            // Function to fetch messages
             function fetchMessages(propertyId) {
                 fetch(`/get_messages?property_id=${encodeURIComponent(propertyId)}`, {
                     method: 'GET',
@@ -1387,22 +1765,22 @@
                 });
             }
 
-            // Inbox button functionality
-            inboxBtn.addEventListener('click', () => {
+            inboxBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 chatModal.style.display = 'flex';
                 chatOverlay.style.display = 'block';
                 showConversationList();
             });
 
-            // Back button functionality
-            chatBackBtn.addEventListener('click', () => {
+            chatBackBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 clearInterval(messagePollingInterval);
                 showConversationList();
             });
 
-            // Action buttons functionality
             document.querySelectorAll('.action-btn').forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const action = button.getAttribute('data-action');
                     const propertyId = button.getAttribute('data-property-id');
                     if (action === 'message') {
@@ -1416,8 +1794,8 @@
                 });
             });
 
-            // Close chat modal
-            chatCloseBtn.addEventListener('click', () => {
+            chatCloseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 chatModal.style.display = 'none';
                 chatOverlay.style.display = 'none';
                 chatInput.value = '';
@@ -1426,8 +1804,8 @@
                 showConversationList();
             });
 
-            // Send message
-            chatSendBtn.addEventListener('click', () => {
+            chatSendBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const message = chatInput.value.trim();
                 const propertyId = chatModal.getAttribute('data-property-id');
                 if (message && propertyId) {
@@ -1479,37 +1857,40 @@
                 }
             });
 
-            // Image upload
-            chatUploadImageBtn.addEventListener('click', () => {
+            chatUploadImageBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 imageInput.click();
             });
 
-            imageInput.addEventListener('change', () => {
+            imageInput.addEventListener('change', (e) => {
+                e.stopPropagation();
                 const file = imageInput.files[0];
                 if (file) {
                     alert(`Image selected: ${file.name}`);
                 }
             });
 
-            // Video upload
-            chatUploadVideoBtn.addEventListener('click', () => {
+            chatUploadVideoBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 videoInput.click();
             });
 
-            videoInput.addEventListener('change', () => {
+            videoInput.addEventListener('change', (e) => {
+                e.stopPropagation();
                 const file = videoInput.files[0];
                 if (file) {
                     alert(`Video selected: ${file.name}`);
                 }
             });
 
-            // Emoji picker
-            chatEmojiBtn.addEventListener('click', () => {
+            chatEmojiBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
             });
 
             emojiPicker.querySelectorAll('button').forEach(emojiBtn => {
-                emojiBtn.addEventListener('click', () => {
+                emojiBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     chatInput.value += emojiBtn.textContent;
                     emojiPicker.style.display = 'none';
                     chatInput.focus();
@@ -1604,14 +1985,16 @@
                     <h4>Media</h4>
                     <div class="media-gallery">
                         {% for media in property.media %}
-                            {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
-                                <video class="media-item" muted loop>
-                                    <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
-                                    Your browser does not support the video tag.
-                                </video>
-                            {% else %}
-                                <img src="{{ media }}" alt="Property Media" class="media-item">
-                            {% endif %}
+                            <div class="media-item">
+                                {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
+                                    <video muted loop>
+                                        <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% else %}
+                                    <img src="{{ media }}" alt="Property Media">
+                                {% endif %}
+                            </div>
                         {% endfor %}
                         {% if property.media|length > 1 %}
                         <div class="slideshow-nav">

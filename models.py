@@ -24,6 +24,7 @@ class Property(db.Model):
     availability = db.Column(db.String(20), nullable=False)
     viewing_schedule = db.Column(db.String(255), nullable=False)
     features = db.Column(db.Text, nullable=False)
+    common_area_name = db.Column(db.String(255), nullable=False)  # New column for Common Area Name / Area Nickname
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Message(db.Model):

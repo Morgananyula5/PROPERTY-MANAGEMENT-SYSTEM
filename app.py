@@ -151,7 +151,6 @@ def resident_dashboard():
                 'location': property.location,
                 'sub_county': property.sub_county,
                 'landmarks': property.landmarks,
-                'location_address': next((line.split(': ')[1] for line in description_lines if line.startswith('Location Address: ')), ''),
                 'property_address': next((line.split(': ')[1] for line in description_lines if line.startswith('Property Address: ')), ''),
                 'amenities': next((line.split(': ')[1] for line in description_lines if line.startswith('Amenities: ')), ''),
                 'availability': property.availability,
@@ -165,6 +164,7 @@ def resident_dashboard():
         logger.error(f"Error loading resident dashboard: {str(e)}")
         flash(f"Error loading dashboard: {str(e)}", "danger")
         return redirect(url_for('login'))
+
 
 # Manager Dashboard Route
 @app.route('/manager_dashboard')
@@ -201,7 +201,6 @@ def manager_dashboard():
                 'location': recent_property.location,
                 'sub_county': recent_property.sub_county,
                 'landmarks': recent_property.landmarks,
-                'location_address': next((line.split(': ')[1] for line in description_lines if line.startswith('Location Address: ')), ''),
                 'property_address': next((line.split(': ')[1] for line in description_lines if line.startswith('Property Address: ')), ''),
                 'amenities': next((line.split(': ')[1] for line in description_lines if line.startswith('Amenities: ')), ''),
                 'availability': recent_property.availability,
@@ -238,15 +237,15 @@ def add_property():
         location = request.form.get('location')
         sub_county = request.form.get('sub_county')
         landmarks = request.form.get('landmarks')
-        location_address = request.form.get('location_address')
         property_address = request.form.get('property_address')
         availability = request.form.get('availability')
         amenities = request.form.get('amenities')
+        common_area_name = request.form.get('common_area_name')
         features = request.form.getlist('features[]')
         prices = request.form.getlist('prices[]')
         occupancy_status = request.form.getlist('status[]')
 
-        if not all([name, property_type, status, phone, email, description, location, sub_county, landmarks, location_address, property_address, availability, amenities]):
+        if not all([name, property_type, status, phone, email, description, location, sub_county, landmarks, property_address, availability, amenities, common_area_name]):
             flash("All fields are required.", "danger")
             return redirect(url_for('manager_dashboard'))
 
@@ -287,7 +286,7 @@ def add_property():
         feature_price_status = [{"feature": f, "price": p, "status": s} for f, p, s in zip(features, prices, occupancy_status)]
         features_json = json.dumps(feature_price_status)
 
-        combined_description = f"{description}\nLocation Address: {location_address}\nProperty Address: {property_address}\nAmenities: {amenities}"
+        combined_description = f"{description}\nProperty Address: {property_address}\nAmenities: {amenities}"
         if profile_picture_path:
             combined_description += f"\nProfile Picture: {profile_picture_path}"
         if media_paths:
@@ -306,6 +305,7 @@ def add_property():
             availability=availability,
             viewing_schedule="Not specified",
             features=features_json,
+            common_area_name=common_area_name,
             manager_id=user_id
         )
 
@@ -342,15 +342,15 @@ def edit_property(property_id):
             location = request.form.get('location')
             sub_county = request.form.get('sub_county')
             landmarks = request.form.get('landmarks')
-            location_address = request.form.get('location_address')
             property_address = request.form.get('property_address')
             availability = request.form.get('availability')
             amenities = request.form.get('amenities')
+            common_area_name = request.form.get('common_area_name')
             features = request.form.getlist('features[]')
             prices = request.form.getlist('prices[]')
             occupancy_status = request.form.getlist('status[]')
 
-            if not all([name, property_type, status, phone, email, description, location, sub_county, landmarks, location_address, property_address, availability, amenities]):
+            if not all([name, property_type, status, phone, email, description, location, sub_county, landmarks, property_address, availability, amenities, common_area_name]):
                 flash("All fields are required.", "danger")
                 return redirect(url_for('edit_property', property_id=property_id))
 
@@ -397,7 +397,7 @@ def edit_property(property_id):
             feature_price_status = [{"feature": f, "price": p, "status": s} for f, p, s in zip(features, prices, occupancy_status)]
             features_json = json.dumps(feature_price_status)
 
-            combined_description = f"{description}\nLocation Address: {location_address}\nProperty Address: {property_address}\nAmenities: {amenities}"
+            combined_description = f"{description}\nProperty Address: {property_address}\nAmenities: {amenities}"
             if profile_picture_path:
                 combined_description += f"\nProfile Picture: {profile_picture_path}"
             if media_paths:
@@ -415,6 +415,7 @@ def edit_property(property_id):
             property.availability = availability
             property.viewing_schedule = "Not specified"
             property.features = features_json
+            property.common_area_name = common_area_name
 
             db.session.commit()
             flash("Property updated successfully!", "success")
@@ -438,7 +439,6 @@ def edit_property(property_id):
                 'location': property.location,
                 'sub_county': property.sub_county,
                 'landmarks': property.landmarks,
-                'location_address': next((line.split(': ')[1] for line in description_lines if line.startswith('Location Address: ')), ''),
                 'property_address': next((line.split(': ')[1] for line in description_lines if line.startswith('Property Address: ')), ''),
                 'amenities': next((line.split(': ')[1] for line in description_lines if line.startswith('Amenities: ')), ''),
                 'availability': property.availability,
@@ -451,6 +451,8 @@ def edit_property(property_id):
         logger.error(f"Error editing property: {str(e)}")
         flash(f"Error editing property: {str(e)}", "danger")
         return redirect(url_for('manager_dashboard'))
+
+
 
 # Route to Add Media
 @app.route('/add_media/<int:property_id>', methods=['POST'])
@@ -467,7 +469,6 @@ def add_media(property_id):
 
         description_lines = property.description.split('\n')
         main_description = description_lines[0]
-        location_address = next((line.split(': ')[1] for line in description_lines if line.startswith('Location Address: ')), '')
         property_address = next((line.split(': ')[1] for line in description_lines if line.startswith('Property Address: ')), '')
         amenities = next((line.split(': ')[1] for line in description_lines if line.startswith('Amenities: ')), '')
         profile_picture_path = next((line.split(': ')[1] for line in description_lines if line.startswith('Profile Picture: ')), None)
@@ -496,7 +497,7 @@ def add_media(property_id):
             return redirect(url_for('manager_dashboard'))
 
         all_media = existing_media + new_media_paths
-        combined_description = f"{main_description}\nLocation Address: {location_address}\nProperty Address: {property_address}\nAmenities: {amenities}"
+        combined_description = f"{main_description}\nProperty Address: {property_address}\nAmenities: {amenities}"
         if profile_picture_path:
             combined_description += f"\nProfile Picture: {profile_picture_path}"
         if all_media:

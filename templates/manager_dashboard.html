@@ -27,11 +27,11 @@
 
     .container {
       background: rgba(255, 255, 255, 0.1);
-      padding: 40px;
+      padding: 30px;
       border-radius: 20px;
       backdrop-filter: blur(10px);
       width: 100%;
-      max-width: 900px;
+      max-width: 1200px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       position: relative;
       overflow: hidden;
@@ -101,13 +101,15 @@
 
     input, select, textarea {
       width: 100%;
+      min-width: 300px;
       padding: 14px;
-      margin: 15px 0;
+      padding-right: 60px;
+      margin: 15px 0 37.5px 0;
       border-radius: 12px;
       border: none;
       background: rgba(255, 255, 255, 0.15);
       color: #ffffff;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 400;
       transition: all 0.3s ease;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -120,19 +122,34 @@
       outline: none;
     }
 
-    input::placeholder, textarea::placeholder {
+    input::placeholder, textarea::placeholder, select option[disabled][selected] {
       color: #d1eaff;
-      font-weight: 500;
+      font-weight: 400;
+      font-size: 1.3rem;
       opacity: 0.8;
+      text-overflow: clip;
+      white-space: nowrap;
     }
 
     select {
       appearance: none;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
       background-repeat: no-repeat;
-      background-position: right 15px center;
-      padding-right: 40px;
+      background-position: right 20px center;
+      background-size: 24px;
       cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    select:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 10px rgba(29, 161, 242, 0.2);
+    }
+
+    select[name="type"] {
+      margin-bottom: 37.5px;
     }
 
     select option {
@@ -143,7 +160,7 @@
 
     .file-input-container {
       position: relative;
-      margin: 20px 0;
+      margin: 20px 0 37.5px 0;
     }
 
     .file-input-container input[type="file"] {
@@ -153,6 +170,7 @@
       color: #ffffff;
       cursor: pointer;
       font-size: 1.4rem;
+      min-width: 300px;
     }
 
     .file-input-container::before {
@@ -160,7 +178,7 @@
       position: absolute;
       top: -25px;
       left: 0;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: #ffffff;
       opacity: 0.9;
@@ -170,7 +188,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: 15px 0;
+      margin: 15px 0 37.5px 0;
     }
 
     .copy-icon {
@@ -182,6 +200,7 @@
       padding: 8px;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.1);
+      pointer-events: auto;
     }
 
     .copy-icon:hover {
@@ -198,8 +217,8 @@
 
     .feature-item {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 50px 50px;
-      gap: 10px;
+      grid-template-columns: 4fr 2fr 3fr 2fr 50px 50px;
+      gap: 15px;
       align-items: center;
       background: rgba(255, 255, 255, 0.05);
       padding: 10px;
@@ -213,15 +232,48 @@
     }
 
     .feature-item input[name="features[]"] {
-      min-width: 0;
+      min-width: 200px;
     }
 
-    .feature-item input[name="prices[]"] {
-      min-width: 0;
+    .feature-item input[name="prices[]"],
+    .feature-item select[name="status[]"],
+    .feature-item input[name="rooms_available[]"] {
+      min-width: 180px;
+    }
+
+    .feature-item input,
+    .feature-item select {
+      font-size: 1.2rem;
+      padding: 12px;
+      padding-right: 60px;
+      min-width: 300px;
     }
 
     .feature-item select[name="status[]"] {
-      min-width: 0;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 20px center !important;
+      background-size: 24px !important;
+      cursor: pointer;
+    }
+
+    .feature-item select[name="status[]"]:focus,
+    .feature-item select[name="status[]"]:hover {
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 20px center !important;
+      background-size: 24px !important;
+    }
+
+    .feature-item input::placeholder,
+    .feature-item select[name="status[]"] option[disabled][selected] {
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      font-size: 1.2rem;
     }
 
     .add-btn, .remove-btn {
@@ -280,18 +332,18 @@
     label {
       font-weight: 600;
       color: #ffffff;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
       display: block;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
     }
 
     .label-closer {
-      margin-bottom: 5px;
+      margin-bottom: 12.5px;
     }
 
     .property-details {
       text-align: left;
-      margin-top: 30px;
+      margin-top: 20px;
       background: rgba(255, 255, 255, 0.05);
       padding: 20px;
       border-radius: 12px;
@@ -304,27 +356,69 @@
       color: #ffffff;
     }
 
-    .property-details p {
+    .property-detail-block {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #4AB3F4;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .property-detail-block:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(29, 161, 242, 0.3);
+    }
+
+    .property-detail-block h4 {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: background 0.3s ease;
+      pointer-events: auto;
+      max-width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .property-detail-block h4:hover {
+      background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+    }
+
+    .property-detail-block p, .property-detail-block .input-with-copy {
+      pointer-events: none;
       margin: 10px 0;
       font-size: 1.3rem;
       color: #d1eaff;
     }
 
-    .property-details p strong {
-      font-weight: 800;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .property-details ul li {
+    .property-detail-block ul {
+      pointer-events: none;
+      margin: 10px 0;
       font-size: 1.3rem;
       color: #d1eaff;
+      padding-left: 20px;
+      list-style-position: inside;
+    }
+
+    .property-detail-block ul li {
+      font-size: 1.3rem;
+      color: #d1eaff;
+      margin-bottom: 5px;
     }
 
     .slideshow-container {
       position: relative;
       max-width: 100%;
       height: 300px;
-      margin-top: 20px;
       overflow: hidden;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -536,7 +630,6 @@
       opacity: 1;
     }
 
-    /* Chat Modal Styles */
     .chat-modal-overlay {
       position: fixed;
       top: 0;
@@ -824,13 +917,14 @@
     }
 
     @keyframes slideIn {
-      from { transform: intranslate(-50%, -60%); opacity: 0; }
+      from { transform: translate(-50%, -60%); opacity: 0; }
       to { transform: translate(-50%, -50%); opacity: 1; }
     }
 
     @media (max-width: 600px) {
       .container {
         padding: 20px;
+        max-width: 100%;
       }
 
       .feature-item {
@@ -838,8 +932,17 @@
         gap: 10px;
       }
 
-      .feature-item input, .feature-item select {
-        margin: 5px 0;
+      .feature-item input,
+      .feature-item select {
+        margin: 10px 0;
+        min-width: 100%;
+        font-size: 1.2rem;
+        padding: 8px;
+        padding-right: 50px;
+      }
+
+      .feature-item select[name="status[]"] {
+        background-position: right 15px center;
       }
 
       .add-btn, .remove-btn {
@@ -934,25 +1037,32 @@
         padding: 6px 12px;
         font-size: 0.8em;
       }
+
+      .property-detail-block h4 {
+        font-size: 1.1em;
+        padding: 6px 10px;
+        max-width: 150px;
+      }
     }
   </style>
 
   <script>
     function copyText(id) {
-      var copyText = document.getElementById(id);
+      const copyText = document.getElementById(id);
       navigator.clipboard.writeText(copyText.value);
-      alert("Copied: " + copyText.value);
+      alert(`Copied: ${copyText.value}`);
     }
 
     function addFeature() {
       const container = document.getElementById("features-container");
-      document.querySelectorAll('.add-btn').forEach(btn => btn.remove());
+      // Remove add-btn from all feature items except the first
+      document.querySelectorAll('.feature-item:not(:first-child) .add-btn').forEach(btn => btn.remove());
       const div = document.createElement("div");
       div.classList.add("feature-item");
       div.innerHTML = `
-        <input type="text" name="features[]" placeholder="Feature ( e.g. One Bedroom)" required>
+        <input type="text" name="features[]" placeholder="Feature (e.g., One Bedroom)" required>
         <input type="number" name="prices[]" placeholder="Price (Ksh)" required>
-        <select name="status[]" required>
+        <select name="status[]" required style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\\'white\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' width=\\'28\\' xmlns=\\'http://www.w3.org/2000/svg\\'><path d=\\'M7 10l5 5 5-5z\\' stroke=\\'rgba(0,0,0,0.2)\\' stroke-width=\\'1\\'></path><path d=\\'M0 0h24v24H0z\\' fill=\\'none\\'></path></svg>'); background-repeat: no-repeat; background-position: right 20px center; background-size: 24px;">
           <option value="" disabled selected>Property Status</option>
           <option value="Available">Available</option>
           <option value="Rented">Rented</option>
@@ -960,14 +1070,43 @@
           <option value="Pending">Pending</option>
           <option value="Under Maintenance">Under Maintenance</option>
         </select>
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">➖</button>
+        <input type="number" name="rooms_available[]" placeholder="Rooms Available" min="0" required>
         <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+        <button type="button" class="remove-btn" onclick="removeFeature(this)">➖</button>
       `;
       container.appendChild(div);
+      // Ensure the first feature item always has an add-btn
+      const firstFeatureItem = document.querySelector('.feature-item:first-child');
+      if (!firstFeatureItem.querySelector('.add-btn')) {
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button';
+        addBtn.classList.add('add-btn');
+        addBtn.innerText = '➕';
+        addBtn.onclick = addFeature;
+        firstFeatureItem.insertBefore(addBtn, firstFeatureItem.querySelector('.remove-btn'));
+      }
+    }
+
+    function removeFeature(button) {
+      const container = document.getElementById("features-container");
+      if (container.children.length > 1) {
+        button.parentElement.remove();
+        // Ensure the first feature item always has an add-btn
+        const firstFeatureItem = document.querySelector('.feature-item:first-child');
+        if (!firstFeatureItem.querySelector('.add-btn')) {
+          const addBtn = document.createElement('button');
+          addBtn.type = 'button';
+          addBtn.classList.add('add-btn');
+          addBtn.innerText = '➕';
+          addBtn.onclick = addFeature;
+          firstFeatureItem.insertBefore(addBtn, firstFeatureItem.querySelector('.remove-btn'));
+        }
+      } else {
+        alert("At least one feature item is required.");
+      }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Full-screen media modal elements
       const fullscreenModal = document.createElement('div');
       fullscreenModal.classList.add('fullscreen-media-modal');
       fullscreenModal.innerHTML = `
@@ -983,7 +1122,6 @@
       fullscreenOverlay.classList.add('fullscreen-media-overlay');
       document.body.appendChild(fullscreenOverlay);
 
-      // Full-screen modal functionality
       let currentMediaList = [];
       let currentMediaIndex = 0;
       let touchStartX = 0;
@@ -995,17 +1133,14 @@
         fullscreenOverlay.style.display = 'block';
         showFullscreenMedia(currentMediaIndex);
 
-        // Close modal
         fullscreenModal.querySelector('.close-fullscreen-btn').addEventListener('click', () => {
           closeFullscreenModal();
         });
 
-        // Overlay click to close
         fullscreenOverlay.addEventListener('click', () => {
           closeFullscreenModal();
         });
 
-        // Navigation buttons
         fullscreenModal.querySelector('.fullscreen-nav .prev').addEventListener('click', () => {
           showFullscreenMedia((currentMediaIndex - 1 + currentMediaList.length) % currentMediaList.length);
         });
@@ -1014,7 +1149,6 @@
           showFullscreenMedia((currentMediaIndex + 1) % currentMediaList.length);
         });
 
-        // Swipe support
         fullscreenModal.addEventListener('touchstart', (e) => {
           touchStartX = e.changedTouches[0].screenX;
         });
@@ -1047,7 +1181,6 @@
           mediaContent.innerHTML = `<img src="${mediaUrl}" alt="Full-screen Media">`;
         }
 
-        // Update navigation visibility
         const prevBtn = fullscreenModal.querySelector('.fullscreen-nav .prev');
         const nextBtn = fullscreenModal.querySelector('.fullscreen-nav .next');
         if (currentMediaList.length > 1) {
@@ -1063,9 +1196,7 @@
         fullscreenModal.style.display = 'none';
         fullscreenOverlay.style.display = 'none';
         const currentVideo = fullscreenModal.querySelector('video');
-        if (currentVideo) {
-          currentVideo.pause();
-        }
+        if (currentVideo) currentVideo.pause();
         resetSlideInterval();
       }
 
@@ -1085,7 +1216,6 @@
         });
       }
 
-      // Add Media button functionality
       const addMediaButton = document.querySelector('#add-media-btn');
       const mediaInput = document.querySelector('#add-media-input');
       const mediaForm = document.querySelector('#add-media-form');
@@ -1102,7 +1232,6 @@
         });
       }
 
-      // Slideshow functionality
       const slides = document.querySelectorAll('.slide');
       const dots = document.querySelectorAll('.dot');
       let slideIndex = 0;
@@ -1111,28 +1240,23 @@
       function showSlides(index) {
         if (slides.length === 0) return;
 
-        // Ensure index is within bounds
         if (index >= slides.length) slideIndex = 0;
         if (index < 0) slideIndex = slides.length - 1;
 
-        // Hide all slides and pause videos
         slides.forEach(slide => {
           slide.classList.remove('active');
           const video = slide.querySelector('video');
           if (video) video.pause();
         });
 
-        // Remove active class from all dots
         dots.forEach(dot => dot.classList.remove('active'));
 
-        // Show the current slide and play video if present
         slides[slideIndex].classList.add('active');
         const activeVideo = slides[slideIndex].querySelector('video');
         if (activeVideo) {
           activeVideo.play().catch(error => console.log('Video play failed:', error));
         }
 
-        // Update active dot
         if (dots[slideIndex]) {
           dots[slideIndex].classList.add('active');
         }
@@ -1154,7 +1278,7 @@
         slideInterval = setInterval(() => {
           slideIndex++;
           showSlides(slideIndex);
-        }, 5000); // Change slide every 5 seconds
+        }, 5000);
       }
 
       function resetSlideInterval() {
@@ -1162,7 +1286,6 @@
         startSlideInterval();
       }
 
-      // Initialize slideshow
       if (slides.length > 0) {
         showSlides(slideIndex);
         if (slides.length > 1) {
@@ -1170,7 +1293,6 @@
         }
       }
 
-      // Add event listeners for navigation
       const prev = document.querySelector('.prev');
       const next = document.querySelector('.next');
       if (prev && next) {
@@ -1182,7 +1304,6 @@
         dot.addEventListener('click', () => currentSlide(index));
       });
 
-      // Full-screen media handling for slides
       slides.forEach((slide, index) => {
         const media = slide.querySelector('img') || slide.querySelector('video');
         if (media) {
@@ -1199,7 +1320,6 @@
         }
       });
 
-      // Profile picture click
       const profilePicture = document.querySelector('.profile-picture');
       if (profilePicture) {
         profilePicture.addEventListener('click', () => {
@@ -1213,7 +1333,6 @@
         });
       }
 
-      // Chat modal functionality
       const chatModal = document.getElementById('chatModal');
       const chatOverlay = document.querySelector('.chat-modal-overlay');
       const chatCloseBtn = document.querySelector('.chat-close-btn');
@@ -1232,7 +1351,6 @@
       const chatInputArea = document.querySelector('.chat-input-area');
       const chatHeaderTitle = document.querySelector('.chat-header h2');
 
-      // Function to show conversation list
       function showConversationList() {
         chatHeaderTitle.textContent = 'Inbox';
         conversationList.style.display = 'block';
@@ -1242,7 +1360,6 @@
         fetchConversations();
       }
 
-      // Function to show chat messages
       function showChatMessages(senderId, propertyId, senderName) {
         chatHeaderTitle.textContent = `Chat with ${senderName}`;
         conversationList.style.display = 'none';
@@ -1258,117 +1375,112 @@
         messagePollingInterval = setInterval(() => fetchMessages(propertyId, senderId), 5000);
       }
 
-      // Function to fetch conversations
       let messagePollingInterval;
       function fetchConversations() {
-          fetch('/get_conversations', {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-              },
-              credentials: 'include'
-          })
-          .then(response => {
-              if (!response.ok) {
-                  return response.text().then(text => {
-                      throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
-                  });
-              }
-              return response.json();
-          })
-          .then(data => {
-              if (data.status === 'success') {
-                  conversationList.innerHTML = '';
-                  if (data.conversations.length === 0) {
-                      conversationList.innerHTML = '<p style="color: #657786; text-align: center; font-size: 1em;">No conversations found.</p>';
-                  } else {
-                      data.conversations.forEach(conv => {
-                          const convElement = document.createElement('div');
-                          convElement.classList.add('conversation-item');
-                          const avatarLetter = conv.sender_name.charAt(0).toUpperCase();
-                          convElement.innerHTML = `
-                              <div class="avatar">${avatarLetter}</div>
-                              <p>${conv.sender_name}</p>
-                              <button class="open-conversation-btn" data-sender-id="${conv.sender_id}" data-property-id="${conv.property_id}" data-sender-name="${conv.sender_name}">Open</button>
-                          `;
-                          conversationList.appendChild(convElement);
-                      });
+        fetch('/get_conversations', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'include'
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            conversationList.innerHTML = '';
+            if (data.conversations.length === 0) {
+              conversationList.innerHTML = '<p style="color: #657786; text-align: center; font-size: 1em;">No conversations found.</p>';
+            } else {
+              data.conversations.forEach(conv => {
+                const convElement = document.createElement('div');
+                convElement.classList.add('conversation-item');
+                const avatarLetter = conv.sender_name.charAt(0).toUpperCase();
+                convElement.innerHTML = `
+                  <div class="avatar">${avatarLetter}</div>
+                  <p>${conv.sender_name}</p>
+                  <button class="open-conversation-btn" data-sender-id="${conv.sender_id}" data-property-id="${conv.property_id}" data-sender-name="${conv.sender_name}">Open</button>
+                `;
+                conversationList.appendChild(convElement);
+              });
 
-                      document.querySelectorAll('.open-conversation-btn').forEach(btn => {
-                          btn.addEventListener('click', () => {
-                              const senderId = btn.getAttribute('data-sender-id');
-                              const propertyId = btn.getAttribute('data-property-id');
-                              const senderName = btn.getAttribute('data-sender-name');
-                              showChatMessages(senderId, propertyId, senderName);
-                          });
-                      });
-                  }
-              } else {
-                  alert('Failed to load conversations: ' + data.message);
-              }
-          })
-          .catch(error => {
-              console.error('Error fetching conversations:', error);
-              alert('Error loading conversations: ' + error.message);
-          });
+              document.querySelectorAll('.open-conversation-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                  const senderId = btn.getAttribute('data-sender-id');
+                  const propertyId = btn.getAttribute('data-property-id');
+                  const senderName = btn.getAttribute('data-sender-name');
+                  showChatMessages(senderId, propertyId, senderName);
+                });
+              });
+            }
+          } else {
+            alert('Failed to load conversations: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching conversations:', error);
+          alert('Error loading conversations: ' + error.message);
+        });
       }
 
-      // Inbox button functionality
       inboxBtn.addEventListener('click', () => {
         chatModal.style.display = 'flex';
         chatOverlay.style.display = 'block';
         showConversationList();
       });
 
-      // Back button functionality
       chatBackBtn.addEventListener('click', () => {
         clearInterval(messagePollingInterval);
         showConversationList();
       });
 
-      // Function to fetch messages for a specific sender
       function fetchMessages(propertyId, senderId) {
-          fetch(`/get_messages?property_id=${encodeURIComponent(propertyId)}&sender_id=${encodeURIComponent(senderId)}`, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-              },
-              credentials: 'include'
-          })
-          .then(response => {
-              if (!response.ok) {
-                  return response.text().then(text => {
-                      throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
-                  });
-              }
-              return response.json();
-          })
-          .then(data => {
-              if (data.status === 'success') {
-                  chatMessages.innerHTML = '';
-                  data.messages.forEach(msg => {
-                      const messageElement = document.createElement('div');
-                      const isSent = msg.sender_id === {{ session['user_id'] | default(0) }};
-                      messageElement.classList.add('chat-message', isSent ? 'sent' : 'received');
-                      const timestamp = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                      messageElement.innerHTML = `<p>${msg.content}</p><div class="chat-message-timestamp">${timestamp}</div>`;
-                      chatMessages.appendChild(messageElement);
-                  });
-                  chatMessages.scrollTop = chatMessages.scrollHeight;
-              } else {
-                  console.error('Failed to fetch messages:', data.message);
-                  alert('Failed to load messages: ' + data.message);
-              }
-          })
-          .catch(error => {
-              console.error('Error fetching messages:', error);
-              alert('Error fetching messages: ' + error.message);
-          });
+        fetch(`/get_messages?property_id=${encodeURIComponent(propertyId)}&sender_id=${encodeURIComponent(senderId)}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'include'
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.status === 'success') {
+            chatMessages.innerHTML = '';
+            data.messages.forEach(msg => {
+              const messageElement = document.createElement('div');
+              const isSent = msg.sender_id === {{ session['user_id'] | default(0) }};
+              messageElement.classList.add('chat-message', isSent ? 'sent' : 'received');
+              const timestamp = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              messageElement.innerHTML = `<p>${msg.content}</p><div class="chat-message-timestamp">${timestamp}</div>`;
+              chatMessages.appendChild(messageElement);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          } else {
+            console.error('Failed to fetch messages:', data.message);
+            alert('Failed to load messages: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching messages:', error);
+          alert('Error fetching messages: ' + error.message);
+        });
       }
 
-      // Stop polling when closing the chat modal
       chatCloseBtn.addEventListener('click', () => {
         chatModal.style.display = 'none';
         chatOverlay.style.display = 'none';
@@ -1378,64 +1490,60 @@
         showConversationList();
       });
 
-      // Send message
       chatSendBtn.addEventListener('click', () => {
         const message = chatInput.value.trim();
         const propertyId = chatModal.getAttribute('data-property-id');
         const senderId = chatModal.getAttribute('data-sender-id');
         if (message && propertyId && senderId) {
-            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message', 'sent');
-            messageElement.innerHTML = `<p>${message}</p><div class="chat-message-timestamp">${timestamp}</div>`;
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+          const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const messageElement = document.createElement('div');
+          messageElement.classList.add('chat-message', 'sent');
+          messageElement.innerHTML = `<p>${message}</p><div class="chat-message-timestamp">${timestamp}</div>`;
+          chatMessages.appendChild(messageElement);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Send message to backend
-            fetch('/send_message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    content: message,
-                    is_manager: true,
-                    property_id: propertyId,
-                    recipient_id: senderId
-                })
+          fetch('/send_message', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              content: message,
+              is_manager: true,
+              property_id: propertyId,
+              recipient_id: senderId
             })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status !== 'success') {
-                    alert('Failed to send message: ' + data.message);
-                    messageElement.remove();
-                } else {
-                    // Refresh messages to include the new one
-                    fetchMessages(propertyId, senderId);
-                }
-            })
-            .catch(error => {
-                console.error('Error sending message:', error);
-                alert('Error sending message: ' + error.message);
-                messageElement.remove();
-            });
+          })
+          .then(response => {
+            if (!response.ok) {
+              return response.text().then(text => {
+                throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.status !== 'success') {
+              alert('Failed to send message: ' + data.message);
+              messageElement.remove();
+            } else {
+              fetchMessages(propertyId, senderId);
+            }
+          })
+          .catch(error => {
+            console.error('Error sending message:', error);
+            alert('Error sending message: ' + error.message);
+            messageElement.remove();
+          });
 
-            chatInput.value = '';
+          chatInput.value = '';
         } else {
-            alert('Please enter a message and ensure a conversation is selected.');
+          alert('Please enter a message and ensure a conversation is selected.');
         }
-    });
+      });
 
-      // Image upload
       chatUploadImageBtn.addEventListener('click', () => {
         imageInput.click();
       });
@@ -1444,11 +1552,9 @@
         const file = imageInput.files[0];
         if (file) {
           alert(`Image selected: ${file.name}`);
-          // Placeholder: Handle image upload to backend
         }
       });
 
-      // Video upload
       chatUploadVideoBtn.addEventListener('click', () => {
         videoInput.click();
       });
@@ -1457,11 +1563,9 @@
         const file = videoInput.files[0];
         if (file) {
           alert(`Video selected: ${file.name}`);
-          // Placeholder: Handle video upload to backend
         }
       });
 
-      // Emoji picker
       chatEmojiBtn.addEventListener('click', () => {
         emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
       });
@@ -1498,52 +1602,98 @@
       <img src="{{ profile_picture }}" alt="Profile Picture" class="profile-picture">
       <div class="property-details">
         <h2>{{ property.name }}</h2>
-        <p><strong>Type:</strong> {{ property.type }}</p>
-        <p><strong>Features:</strong></p>
-        <ul>
-          {% for item in property.features %}
-            <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }})</li>
-          {% endfor %}
-        </ul>
-        <p><strong>Status:</strong> {{ property.status }}</p>
-        <p><strong>Description:</strong> {{ property.description }}</p>
-        <p><strong>Amenities:</strong> {{ property.amenities }}</p>
-        <p><strong>Location:</strong> {{ property.location }}</p>
-        <p><strong>Sub-county:</strong> {{ property.sub_county }}</p>
-        <p><strong>Landmarks:</strong> {{ property.landmarks }}</p>
-        <p><strong>Location Address:</strong> {{ property.location_address }}</p>
-        <p><strong>Property Address:</strong> {{ property.property_address }}</p>
-        <p><strong>Phone:</strong> {{ property.phone }}</p>
-        <p><strong>Email:</strong> {{ property.email }}</p>
-        <p><strong>Availability:</strong> {{ property.availability }}</p>
-        {% if property.media %}
-          <p><strong>Media:</strong></p>
-          <div class="slideshow-container">
-            {% for media in property.media %}
-              <div class="slide">
-                {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
-                  <video controls muted loop>
-                    <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
-                    Your browser does not support the video tag.
-                  </video>
-                {% else %}
-                  <img src="{{ media }}" alt="Property Media">
-                {% endif %}
-              </div>
+        <div class="property-detail-block">
+          <h4>Type</h4>
+          <p>{{ property.type }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Features</h4>
+          <ul>
+            {% for item in property.features %}
+              <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }}, {{ item.rooms_available | default('0') }} rooms)</li>
             {% endfor %}
+          </ul>
+        </div>
+        <div class="property-detail-block">
+          <h4>Status</h4>
+          <p>{{ property.status }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Location</h4>
+          <p>{{ property.location }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Sub-county</h4>
+          <p>{{ property.sub_county }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Property Address</h4>
+          <p>{{ property.property_address }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Common Area Name</h4>
+          <p>{{ property.common_area_name }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Landmarks</h4>
+          <p>{{ property.landmarks }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Phone</h4>
+          <div class="input-with-copy">
+            <p>{{ property.phone }}</p>
+            <span class="copy-icon" title="Copy" onclick="copyText('phone')">📋</span>
+          </div>
+        </div>
+        <div class="property-detail-block">
+          <h4>Email</h4>
+          <div class="input-with-copy">
+            <p>{{ property.email }}</p>
+            <span class="copy-icon" title="Copy" onclick="copyText('email')">📋</span>
+          </div>
+        </div>
+        <div class="property-detail-block">
+          <h4>Amenities</h4>
+          <p>{{ property.amenities }}</p>
+        </div>
+        {% if property.media %}
+          <div class="property-detail-block">
+            <h4>Media</h4>
+            <div class="slideshow-container">
+              {% for media in property.media %}
+                <div class="slide">
+                  {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
+                    <video controls muted loop>
+                      <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
+                      Your browser does not support the video tag.
+                    </video>
+                  {% else %}
+                    <img src="{{ media }}" alt="Property Media">
+                  {% endif %}
+                </div>
+              {% endfor %}
+              {% if property.media|length > 1 %}
+                <a class="prev">❮</a>
+                <a class="next">❯</a>
+              {% endif %}
+            </div>
             {% if property.media|length > 1 %}
-              <a class="prev">❮</a>
-              <a class="next">❯</a>
+              <div class="dots-container">
+                {% for media in property.media %}
+                  <span class="dot"></span>
+                {% endfor %}
+              </div>
             {% endif %}
           </div>
-          {% if property.media|length > 1 %}
-            <div class="dots-container">
-              {% for media in property.media %}
-                <span class="dot"></span>
-              {% endfor %}
-            </div>
-          {% endif %}
         {% endif %}
+        <div class="property-detail-block">
+          <h4>Description</h4>
+          <p>{{ property.description }}</p>
+        </div>
+        <div class="property-detail-block">
+          <h4>Availability</h4>
+          <p>{{ property.availability }}</p>
+        </div>
         <button class="edit-btn" onclick="window.location.href='/edit_property/{{ property.id }}'">Edit Property Details</button>
         <button class="add-new-btn" onclick="window.location.href='/manager_dashboard'">Add New Property</button>
         <button class="action-btn" onclick="window.location.href='/view_bookings/{{ property.id }}'"><span class="btn-icon">📅</span>View Bookings</button>
@@ -1559,38 +1709,27 @@
       </div>
     {% else %}
       <img src="{{ profile_picture | default('default-profile.png') }}" alt="Profile Picture" class="profile-picture">
-
       <form action="{{ '/edit_property/' + property.id|string if edit_mode else '/add_property' }}" method="post" enctype="multipart/form-data">
         <div class="file-input-container profile-picture-container" data-label="Profile Picture">
           <input type="file" id="profile_picture_input" name="profile_picture" accept="image/*">
         </div>
-
-        <input type="text" name="name" placeholder="Property Name" value="{{ property.name if edit_mode else '' }}" required>
-
-        <select name="type" required>
-          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Property Type</option>
+        <label for="name">Property Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter Property Name" value="{{ property.name if edit_mode else '' }}" required>
+        <label for="type">Property Type</label>
+        <select id="type" name="type" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Select Property Type</option>
           <option value="Apartment" {% if edit_mode and property.type == 'Apartment' %}selected{% endif %}>Apartment</option>
           <option value="House" {% if edit_mode and property.type == 'House' %}selected{% endif %}>House</option>
           <option value="Office Space" {% if edit_mode and property.type == 'Office Space' %}selected{% endif %}>Office Space</option>
           <option value="Commercial Property" {% if edit_mode and property.type == 'Commercial Property' %}selected{% endif %}>Commercial Property</option>
           <option value="Land" {% if edit_mode and property.type == 'Land' %}selected{% endif %}>Land</option>
         </select>
-
-        <select name="status" required>
-          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Overall Property Status</option>
-          <option value="Available" {% if edit_mode and property.status == 'Available' %}selected{% endif %}>Available</option>
-          <option value="Rented" {% if edit_mode and property.status == 'Rented' %}selected{% endif %}>Rented</option>
-          <option value="Sold" {% if edit_mode and property.status == 'Sold' %}selected{% endif %}>Sold</option>
-          <option value="Pending" {% if edit_mode and property.status == 'Pending' %}selected{% endif %}>Pending</option>
-          <option value="Under Maintenance" {% if edit_mode and property.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
-        </select>
-
-        <label class="label-closer">Property Features & Pricing:</label>
+        <label class="label-closer">Property Features & Pricing</label>
         <div class="features-container" id="features-container">
           {% if edit_mode and property.features %}
             {% for item in property.features %}
               <div class="feature-item">
-                <input type="text" name="features[]" placeholder="Feature ( e.g. One Bedroom)" value="{{ item.feature }}" required>
+                <input type="text" name="features[]" placeholder="Feature (e.g., One Bedroom)" value="{{ item.feature }}" required>
                 <input type="number" name="prices[]" placeholder="Price (Ksh)" value="{{ item.price }}" required>
                 <select name="status[]" required>
                   <option value="" disabled>Property Status</option>
@@ -1600,13 +1739,14 @@
                   <option value="Pending" {% if item.status == 'Pending' %}selected{% endif %}>Pending</option>
                   <option value="Under Maintenance" {% if item.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
                 </select>
-                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">➖</button>
+                <input type="number" name="rooms_available[]" placeholder="Rooms Available" value="{{ item.rooms_available if item.rooms_available is defined else '' }}" min="0" required>
                 <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+                <button type="button" class="remove-btn" onclick="removeFeature(this)">➖</button>
               </div>
             {% endfor %}
           {% else %}
             <div class="feature-item">
-              <input type="text" name="features[]" placeholder="Feature ( e.g. One Bedroom)" required>
+              <input type="text" name="features[]" placeholder="Room Type (e.g., One Bedroom)" required>
               <input type="number" name="prices[]" placeholder="Price (Ksh)" required>
               <select name="status[]" required>
                 <option value="" disabled selected>Property Status</option>
@@ -1616,48 +1756,60 @@
                 <option value="Pending">Pending</option>
                 <option value="Under Maintenance">Under Maintenance</option>
               </select>
+              <input type="number" name="rooms_available[]" placeholder="Rooms Available" min="0" required>
               <button type="button" class="add-btn" onclick="addFeature()">➕</button>
+              <button type="button" class="remove-btn" onclick="removeFeature(this)">➖</button>
             </div>
           {% endif %}
         </div>
-
-        <input type="text" name="location_address" placeholder="Property Location" value="{{ property.location_address if edit_mode else '' }}" required>
-        <input type="text" name="property_address" placeholder="Property Address" value="{{ property.property_address if edit_mode else '' }}" required>
-
-        <div class="file-input-container media-container" data-label="Property Photos & Videos">
-          <input type="file" name="media[]" accept="image/*,video/*" multiple>
-        </div>
-
-        <input type="text" name="amenities" placeholder="Property Amenities (e.g., gym, pool, laundry, parking, bike storage)" value="{{ property.amenities if edit_mode else '' }}" required>
-
-        <div class="input-with-copy">
-          <input type="text" name="phone" id="phone" placeholder="Property Manager Contact" value="{{ property.phone if edit_mode else '' }}" required>
-          <span class="copy-icon" title="Copy" onclick="copyText('phone')">📋</span>
-        </div>
-
-        <div class="input-with-copy">
-          <input type="email" name="email" id="email" placeholder="Property Manager Email" value="{{ property.email if edit_mode else '' }}" required>
-          <span class="copy-icon" title="Copy" onclick="copyText('email')">📋</span>
-        </div>
-
-        <textarea name="description" placeholder="Property Description" required>{{ property.description if edit_mode else '' }}</textarea>
-
-        <select name="location" required>
-          <option value="" disabled {% if not edit_mode %}selected{% endif %}>City/Town</option>
+        <label for="status">Overall Property Status</label>
+        <select id="status" name="status" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Select Overall Property Status</option>
+          <option value="Available" {% if edit_mode and property.status == 'Available' %}selected{% endif %}>Available</option>
+          <option value="Rented" {% if edit_mode and property.status == 'Rented' %}selected{% endif %}>Rented</option>
+          <option value="Sold" {% if edit_mode and property.status == 'Sold' %}selected{% endif %}>Sold</option>
+          <option value="Pending" {% if edit_mode and property.status == 'Pending' %}selected{% endif %}>Pending</option>
+          <option value="Under Maintenance" {% if edit_mode and property.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+        </select>
+        <label for="location">Property Location (City/Town)</label>
+        <select id="location" name="location" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Select City/Town</option>
           <option value="Nairobi" {% if edit_mode and property.location == 'Nairobi' %}selected{% endif %}>Nairobi</option>
           <option value="Kiambu" {% if edit_mode and property.location == 'Kiambu' %}selected{% endif %}>Kiambu</option>
           <option value="Kajiado" {% if edit_mode and property.location == 'Kajiado' %}selected{% endif %}>Kajiado</option>
         </select>
-        <input type="text" name="sub_county" placeholder="Sub-county" value="{{ property.sub_county if edit_mode else '' }}" required>
-        <input type="text" name="landmarks" placeholder="Nearby Landmarks" value="{{ property.landmarks if edit_mode else '' }}" required>
-
-        <label class="label-closer">Availability:</label>
-        <select name="availability" required>
+        <label for="sub_county">Sub-county</label>
+        <input type="text" id="sub_county" name="sub_county" placeholder="Enter Sub-county" value="{{ property.sub_county if edit_mode else '' }}" required>
+        <label for="property_address">Property Address</label>
+        <input type="text" id="property_address" name="property_address" placeholder="Enter Property Address" value="{{ property.property_address if edit_mode else '' }}" required>
+        <label for="common_area_name">Common Area Name</label>
+        <input type="text" id="common_area_name" name="common_area_name" placeholder="Enter Common Area Name / Nickname" value="{{ property.common_area_name if edit_mode else '' }}" required>
+        <label for="landmarks">Nearby Landmarks</label>
+        <input type="text" id="landmarks" name="landmarks" placeholder="Enter Nearby Landmarks" value="{{ property.landmarks if edit_mode else '' }}" required>
+        <label for="phone">Property Manager Contact</label>
+        <div class="input-with-copy">
+          <input type="text" id="phone" name="phone" placeholder="Enter Contact Number" value="{{ property.phone if edit_mode else '' }}" required>
+          <span class="copy-icon" title="Copy" onclick="copyText('phone')">📋</span>
+        </div>
+        <label for="email">Property Manager Email</label>
+        <div class="input-with-copy">
+          <input type="email" id="email" name="email" placeholder="Enter Email Address" value="{{ property.email if edit_mode else '' }}" required>
+          <span class="copy-icon" title="Copy" onclick="copyText('email')">📋</span>
+        </div>
+        <label for="amenities">Property Amenities</label>
+        <input type="text" id="amenities" name="amenities" placeholder="Amenities (e.g., gym, pool, parking)" value="{{ property.amenities if edit_mode else '' }}" required>
+        <div class="file-input-container media-container" data-label="Property Photos & Videos">
+          <input type="file" name="media[]" accept="image/*,video/*" multiple>
+        </div>
+        <label for="description">Property Description</label>
+        <textarea id="description" name="description" placeholder="Enter Property Description" required>{{ property.description if edit_mode else '' }}</textarea>
+        <label for="availability" class="label-closer">Availability</label>
+        <select id="availability" name="availability" required>
+          <option value="" disabled {% if not edit_mode %}selected{% endif %}>Select Availability</option>
           <option value="9-5" {% if edit_mode and property.availability == '9-5' %}selected{% endif %}>9-5</option>
           <option value="Full-Time" {% if edit_mode and property.availability == 'Full-Time' %}selected{% endif %}>Full-Time</option>
           <option value="Part-Time" {% if edit_mode and property.availability == 'Part-Time' %}selected{% endif %}>Part-Time</option>
         </select>
-
         <button class="btn" type="submit">{{ 'Update Property' if edit_mode else 'Add Property' }}</button>
       </form>
     {% endif %}
