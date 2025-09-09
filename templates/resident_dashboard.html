@@ -406,7 +406,7 @@
         }
 
         .property-detail-block ul {
-            list-style: disc inside;
+            list-style: none;
             padding-left: 10px;
             margin: 10px 0;
         }
@@ -921,6 +921,118 @@
             transform: scale(1.2);
         }
 
+        .bookings-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+        }
+
+        .bookings-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .bookings-header {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .bookings-header h2 {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .bookings-close-btn {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            padding: 5px;
+        }
+
+        .bookings-close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .bookings-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            background: #F5F8FA;
+            color: #14171A;
+            padding: 20px;
+        }
+
+        .bookings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .bookings-table th, .bookings-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #E1E8ED;
+        }
+
+        .bookings-table th {
+            background: #1DA1F2;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .bookings-table td {
+            background: #FFFFFF;
+        }
+
+        .bookings-table .booking-btn {
+            background: linear-gradient(135deg, #1DA1F2, #66BFFF);
+            color: #FFFFFF;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .bookings-table .booking-btn:hover {
+            background: linear-gradient(135deg, #4AB3F4, #80CCFF);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .bookings-table .booking-btn:active {
+            transform: scale(0.95);
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -999,6 +1111,20 @@
                 width: 95%;
                 height: 95vh;
                 max-height: 98vh;
+            }
+            .bookings-modal {
+                width: 95%;
+                max-height: 90vh;
+            }
+            .bookings-table {
+                font-size: 0.8em;
+            }
+            .bookings-table th, .bookings-table td {
+                padding: 8px;
+            }
+            .bookings-table .booking-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
             }
             .chat-input {
                 font-size: 0.8em;
@@ -1097,6 +1223,37 @@
             const hoverOverlay = document.createElement('div');
             hoverOverlay.classList.add('hover-media-overlay');
             document.body.appendChild(hoverOverlay);
+
+            // Bookings modal elements
+            const bookingsModal = document.createElement('div');
+            bookingsModal.classList.add('bookings-modal');
+            bookingsModal.innerHTML = `
+                <div class="bookings-header">
+                    <h2>Bookings</h2>
+                    <button class="bookings-close-btn">✖</button>
+                </div>
+                <div class="bookings-content">
+                    <table class="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Room Type</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Rooms Available</th>
+                                <th>Room Size</th>
+                                <th>Floor</th>
+                                <th>Utilities</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bookings-table-body"></tbody>
+                    </table>
+                </div>
+            `;
+            document.body.appendChild(bookingsModal);
+            const bookingsOverlay = document.createElement('div');
+            bookingsOverlay.classList.add('bookings-modal-overlay');
+            document.body.appendChild(bookingsOverlay);
 
             // Debounce utility function
             function debounce(func, wait) {
@@ -1516,6 +1673,46 @@
                 }
             }
 
+            // Bookings modal functionality
+            function openBookingsModal(propertyId) {
+                bookingsModal.style.display = 'flex';
+                bookingsOverlay.style.display = 'block';
+                const property = {{ properties | tojson }}.find(p => p.id === parseInt(propertyId));
+                if (property && property.features) {
+                    const tableBody = bookingsModal.querySelector('.bookings-table-body');
+                    tableBody.innerHTML = '';
+                    property.features.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.feature || '-'}</td>
+                            <td>${item.price ? item.price + ' ' + (item.currency || 'Ksh') : '-'}</td>
+                            <td>${item.status || '-'}</td>
+                            <td>${item.rooms_available || '-'}</td>
+                            <td>${item.room_size || '-'}</td>
+                            <td>${item.floor || '-'}</td>
+                            <td>${item.utilities || '-'}</td>
+                            <td><button class="booking-btn" data-property-id="${propertyId}" data-feature-id="${index}">Book</button></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    bookingsModal.querySelectorAll('.booking-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const propId = btn.getAttribute('data-property-id');
+                            const featureId = btn.getAttribute('data-feature-id');
+                            alert(`Book Room: Property ID ${propId}, Feature ID ${featureId}`);
+                        });
+                    });
+                }
+                bookingsOverlay.addEventListener('click', closeBookingsModal);
+                bookingsModal.querySelector('.bookings-close-btn').addEventListener('click', closeBookingsModal);
+            }
+
+            function closeBookingsModal() {
+                bookingsModal.style.display = 'none';
+                bookingsOverlay.style.display = 'none';
+            }
+
             // Copy functionality
             document.querySelectorAll('.copy-icon').forEach(icon => {
                 icon.addEventListener('click', (e) => {
@@ -1788,6 +1985,8 @@
                         chatModal.style.display = 'flex';
                         chatOverlay.style.display = 'block';
                         showChatMessages(propertyId, propertyName);
+                    } else if (action === 'book') {
+                        openBookingsModal(propertyId);
                     } else {
                         alert(`Action: ${action} for property ID: ${propertyId}`);
                     }
@@ -1924,63 +2123,89 @@
                 <h3>{{ property.name | default('Unnamed Property') }}</h3>
                 <div class="property-detail-block">
                     <h4>Type</h4>
-                    <p>{{ property.type | default('') }}</p>
+                    {% if property.type %}
+                    <p>&bull; {{ property.type }}</p>
+                    {% endif %}
                 </div>
                 <div class="property-detail-block">
-                    <h4>Features</h4>
+                    <h4>Property Features & Pricing</h4>
                     <ul>
                         {% for item in property.features %}
-                            <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }})</li>
+                            <li>
+                                {% if item.feature %}&bull; <strong>Room Type:</strong> {{ item.feature }}<br>{% endif %}
+                                {% if item.price %}&bull; <strong>Price:</strong> {{ item.price }} {{ item.currency }}<br>{% endif %}
+                                {% if item.status %}&bull; <strong>Status:</strong> {{ item.status }}<br>{% endif %}
+                                {% if item.rooms_available %}&bull; <strong>Rooms Available:</strong> {{ item.rooms_available }}<br>{% endif %}
+                                {% if item.room_size %}&bull; <strong>Room Size:</strong> {{ item.room_size }}<br>{% endif %}
+                                {% if item.floor %}&bull; <strong>Floor:</strong> {{ item.floor }}<br>{% endif %}
+                                {% if item.utilities %}&bull; <strong>Utilities:</strong> {{ item.utilities }}{% endif %}
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="property-detail-block">
-                    <h4>Address</h4>
-                    <p>{{ property.location_address | default('') }}<br>{{ property.property_address | default('') }}</p>
+                    <h4>Overall Property Status</h4>
+                    {% if property.status %}
+                    <p>&bull; {{ property.status }}</p>
+                    {% endif %}
                 </div>
                 <div class="property-detail-block">
-                    <h4>Amenities</h4>
-                    <p>{{ property.amenities | default('') }}</p>
-                </div>
-                <div class="property-detail-block">
-                    <h4>Phone</h4>
-                    <div class="input-with-copy">
-                        <p>{{ property.phone | default('') }}</p>
-                        <span class="copy-icon" data-copy="{{ property.phone | default('') }}">📋</span>
-                    </div>
-                </div>
-                <div class="property-detail-block">
-                    <h4>Email</h4>
-                    <div class="input-with-copy">
-                        <p>{{ property.email | default('') }}</p>
-                        <span class="copy-icon" data-copy="{{ property.email | default('') }}">📋</span>
-                    </div>
-                </div>
-                <div class="property-detail-block">
-                    <h4>Description</h4>
-                    <p>{{ property.description | default('') }}</p>
-                </div>
-                <div class="property-detail-block">
-                    <h4>Location</h4>
-                    <p>{{ property.location | default('') }}</p>
+                    <h4>Property Location (City/Town)</h4>
+                    {% if property.location %}
+                    <p>&bull; {{ property.location }}</p>
+                    {% endif %}
                 </div>
                 <div class="property-detail-block">
                     <h4>Sub-county</h4>
-                    <p>{{ property.sub_county | default('') }}</p>
+                    {% if property.sub_county %}
+                    <p>&bull; {{ property.sub_county }}</p>
+                    {% endif %}
                 </div>
                 <div class="property-detail-block">
-                    <h4>Landmarks</h4>
-                    <p>{{ property.landmarks | default('') }}</p>
+                    <h4>Property Address</h4>
+                    {% if property.location_address or property.property_address %}
+                    <p>
+                        {% if property.location_address %}&bull; {{ property.location_address }}<br>{% endif %}
+                        {% if property.property_address %}&bull; {{ property.property_address }}{% endif %}
+                    </p>
+                    {% endif %}
                 </div>
                 <div class="property-detail-block">
-                    <h4>Availability</h4>
-                    <p>{{ property.availability | default('') }}</p>
+                    <h4>Common Area Name / Neighborhood</h4>
+                    {% if property.common_area_name %}
+                    <p>&bull; {{ property.common_area_name }}</p>
+                    {% endif %}
                 </div>
                 <div class="property-detail-block">
-                    <h4>Status</h4>
-                    <p>{{ property.status | default('') }}</p>
+                    <h4>Nearby Landmarks</h4>
+                    {% if property.landmarks %}
+                    <p>&bull; {{ property.landmarks }}</p>
+                    {% endif %}
                 </div>
-                {% if property.media %}
+                <div class="property-detail-block">
+                    <h4>Property Manager Contact</h4>
+                    {% if property.phone %}
+                    <div class="input-with-copy">
+                        <p>&bull; {{ property.phone }}</p>
+                        <span class="copy-icon" data-copy="{{ property.phone }}">📋</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="property-detail-block">
+                    <h4>Property Manager Email</h4>
+                    {% if property.email %}
+                    <div class="input-with-copy">
+                        <p>&bull; {{ property.email }}</p>
+                        <span class="copy-icon" data-copy="{{ property.email }}">📋</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="property-detail-block">
+                    <h4>Property Amenities</h4>
+                    {% if property.amenities %}
+                    <p>&bull; {{ property.amenities }}</p>
+                    {% endif %}
+                </div>
                 <div class="property-detail-block">
                     <h4>Media</h4>
                     <div class="media-gallery">
@@ -2009,7 +2234,15 @@
                         {% endif %}
                     </div>
                 </div>
-                {% endif %}
+                <div class="property-detail-block">
+                    <h4>Property Description & Availability</h4>
+                    {% if property.description or property.availability %}
+                    <p>
+                        {% if property.description %}&bull; {{ property.description }}<br>{% endif %}
+                        {% if property.availability %}&bull; {{ property.availability }}{% endif %}
+                    </p>
+                    {% endif %}
+                </div>
                 <div class="action-buttons">
                     <button class="action-btn" data-action="message" data-property-id="{{ property.id }}">Message</button>
                     <button class="action-btn" data-action="book" data-property-id="{{ property.id }}">Book Room/Property</button>

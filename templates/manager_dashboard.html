@@ -19,22 +19,17 @@
       color: #ffffff;
       min-height: 100vh;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: flex-start;
       padding: 20px;
       overflow-x: hidden;
     }
 
-    .container {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
+    .dashboard-content {
       width: 100%;
-      max-width: 1200px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-      position: relative;
-      overflow: hidden;
+      max-width: 1400px;
+      padding: 30px;
+      margin-left: 20px;
       animation: fadeIn 0.5s ease-in-out;
     }
 
@@ -103,7 +98,6 @@
       width: 100%;
       min-width: 300px;
       padding: 14px;
-      padding-right: 60px;
       margin: 15px 0 37.5px 0;
       border-radius: 12px;
       border: none;
@@ -129,6 +123,8 @@
       opacity: 0.8;
       text-overflow: clip;
       white-space: nowrap;
+      vertical-align: top;
+      padding-top: 0;
     }
 
     select {
@@ -213,15 +209,17 @@
       display: grid;
       gap: 15px;
       margin: 20px 0;
+      padding: 20px;
+      min-height: 150px;
     }
 
     .feature-item {
       display: grid;
-      grid-template-columns: 4fr 2fr 3fr 2fr 50px 50px;
+      grid-template-columns: 40px 1fr 80px 80px 80px;
       gap: 15px;
       align-items: center;
       background: rgba(255, 255, 255, 0.05);
-      padding: 10px;
+      padding: 15px;
       border-radius: 12px;
       transition: all 0.3s ease;
     }
@@ -231,52 +229,110 @@
       transform: translateY(-2px);
     }
 
+    .feature-number {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: linear-gradient(135deg, #1DA1F2, #005F99);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      align-self: center;
+    }
+
+    .feature-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .feature-inputs input[name="room_size[]"],
+    .feature-inputs input[name="floor[]"] {
+      grid-column: 1 / 2;
+    }
+
     .feature-item input[name="features[]"] {
-      min-width: 200px;
+      min-width: 300px;
     }
 
     .feature-item input[name="prices[]"],
     .feature-item select[name="status[]"],
-    .feature-item input[name="rooms_available[]"] {
-      min-width: 180px;
-    }
-
-    .feature-item input,
-    .feature-item select {
-      font-size: 1.2rem;
-      padding: 12px;
-      padding-right: 60px;
-      min-width: 300px;
+    .feature-item input[name="rooms_available[]"],
+    .feature-item input[name="room_size[]"],
+    .feature-item input[name="floor[]"],
+    .feature-item input[name="utilities[]"] {
+      min-width: 250px;
     }
 
     .feature-item select[name="status[]"] {
-      appearance: none !important;
-      -webkit-appearance: none !important;
-      -moz-appearance: none !important;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
-      background-repeat: no-repeat !important;
-      background-position: right 20px center !important;
-      background-size: 24px !important;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      background-size: 24px;
       cursor: pointer;
     }
 
     .feature-item select[name="status[]"]:focus,
     .feature-item select[name="status[]"]:hover {
-      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
-      background-repeat: no-repeat !important;
-      background-position: right 20px center !important;
-      background-size: 24px !important;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='28' viewBox='0 0 24 24' width='28' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      background-size: 24px;
     }
 
     .feature-item input::placeholder,
     .feature-item select[name="status[]"] option[disabled][selected] {
-      white-space: nowrap;
+      white-space: normal;
       overflow: visible;
-      text-overflow: clip;
-      font-size: 1.2rem;
+      text-overflow: unset;
+      font-size: 1.3rem;
+      vertical-align: top;
+      padding-top: 0;
     }
 
-    .add-btn, .remove-btn {
+    .price-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .price-container input[name="prices[]"] {
+      padding-right: 60px;
+    }
+
+    .price-container select[name="currency[]"] {
+      position: absolute;
+      right: 10px;
+      width: 45px;
+      padding: 10px;
+      background: linear-gradient(135deg, #1DA1F2, #005F99);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1.2rem;
+      border: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z' stroke='rgba(0,0,0,0.2)' stroke-width='1'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      height: 46px;
+    }
+
+    .price-container select[name="currency[]"]:focus {
+      background: linear-gradient(135deg, #005F99, #003C66);
+      box-shadow: 0 4px 15px rgba(29, 161, 242, 0.3);
+      outline: none;
+    }
+
+    .price-container select[name="currency[]"]:hover {
+      transform: scale(1.02);
+    }
+
+    .add-btn, .remove-btn, .upload-media-btn {
       background: rgba(255, 255, 255, 0.1);
       border: none;
       color: #ffffff;
@@ -285,11 +341,32 @@
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s ease;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .add-btn:hover, .remove-btn:hover {
+    .add-btn:hover, .remove-btn:hover, .upload-media-btn:hover {
       background: rgba(29, 161, 242, 0.2);
       transform: scale(1.1);
+    }
+
+    .upload-media-btn {
+      background: linear-gradient(135deg, #1DA1F2, #005F99);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-media-btn input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
     }
 
     .btn {
@@ -314,19 +391,50 @@
     }
 
     .profile-picture {
-      width: 120px;
-      height: 120px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
-      object-fit: cover;
+      background: rgba(255, 255, 255, 0.15);
       border: 4px solid #ffffff;
       margin: 0 auto 20px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .profile-picture::before {
+      content: '👤';
+      font-size: 5rem;
+      color: #d1eaff;
+      display: block;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .profile-picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      position: relative;
+      z-index: 2;
     }
 
     .profile-picture:hover {
       transform: scale(1.05);
+    }
+
+    .profile-picture.no-image::before {
+      display: block;
+    }
+
+    .profile-picture.has-image::before {
+      display: none;
     }
 
     label {
@@ -354,65 +462,6 @@
       font-weight: 700;
       margin-bottom: 20px;
       color: #ffffff;
-    }
-
-    .property-detail-block {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid #4AB3F4;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
-    }
-
-    .property-detail-block:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(29, 161, 242, 0.3);
-    }
-
-    .property-detail-block h4 {
-      font-size: 1.3em;
-      font-weight: 700;
-      color: #FFFFFF;
-      background: linear-gradient(135deg, #1DA1F2, #66BFFF);
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-      transition: background 0.3s ease;
-      pointer-events: auto;
-      max-width: 200px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .property-detail-block h4:hover {
-      background: linear-gradient(135deg, #4AB3F4, #80CCFF);
-    }
-
-    .property-detail-block p, .property-detail-block .input-with-copy {
-      pointer-events: none;
-      margin: 10px 0;
-      font-size: 1.3rem;
-      color: #d1eaff;
-    }
-
-    .property-detail-block ul {
-      pointer-events: none;
-      margin: 10px 0;
-      font-size: 1.3rem;
-      color: #d1eaff;
-      padding-left: 20px;
-      list-style-position: inside;
-    }
-
-    .property-detail-block ul li {
-      font-size: 1.3rem;
-      color: #d1eaff;
-      margin-bottom: 5px;
     }
 
     .slideshow-container {
@@ -922,14 +971,24 @@
     }
 
     @media (max-width: 600px) {
-      .container {
+      .dashboard-content {
         padding: 20px;
         max-width: 100%;
+        margin-left: 10px;
       }
 
       .feature-item {
-        grid-template-columns: 1fr;
+        grid-template-columns: 40px 1fr;
         gap: 10px;
+      }
+
+      .feature-inputs {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-inputs input[name="room_size[]"],
+      .feature-inputs input[name="floor[]"] {
+        grid-column: auto;
       }
 
       .feature-item input,
@@ -937,16 +996,36 @@
         margin: 10px 0;
         min-width: 100%;
         font-size: 1.2rem;
-        padding: 8px;
-        padding-right: 50px;
+        padding: 12px;
       }
 
       .feature-item select[name="status[]"] {
         background-position: right 15px center;
       }
 
-      .add-btn, .remove-btn {
+      .price-container input[name="prices[]"] {
+        padding-right: 55px;
+      }
+
+      .price-container select[name="currency[]"] {
+        right: 10px;
+        width: 40px;
+        font-size: 1.1rem;
+        background-position: right 8px center;
+        background-size: 18px;
         padding: 8px;
+        height: 40px;
+      }
+
+      .add-btn, .remove-btn, .upload-media-btn {
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .feature-number {
+        padding: 6px;
+        font-size: 1.1rem;
       }
 
       h1 {
@@ -954,8 +1033,8 @@
       }
 
       .profile-picture {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
       }
 
       .slideshow-container {
@@ -1037,12 +1116,6 @@
         padding: 6px 12px;
         font-size: 0.8em;
       }
-
-      .property-detail-block h4 {
-        font-size: 1.1em;
-        padding: 6px 10px;
-        max-width: 150px;
-      }
     }
   </style>
 
@@ -1055,27 +1128,41 @@
 
     function addFeature() {
       const container = document.getElementById("features-container");
-      // Remove add-btn from all feature items except the first
+      const featureCount = container.children.length + 1;
       document.querySelectorAll('.feature-item:not(:first-child) .add-btn').forEach(btn => btn.remove());
       const div = document.createElement("div");
       div.classList.add("feature-item");
       div.innerHTML = `
-        <input type="text" name="features[]" placeholder="Feature (e.g., One Bedroom)" required>
-        <input type="number" name="prices[]" placeholder="Price (Ksh)" required>
-        <select name="status[]" required style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\\'white\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' width=\\'28\\' xmlns=\\'http://www.w3.org/2000/svg\\'><path d=\\'M7 10l5 5 5-5z\\' stroke=\\'rgba(0,0,0,0.2)\\' stroke-width=\\'1\\'></path><path d=\\'M0 0h24v24H0z\\' fill=\\'none\\'></path></svg>'); background-repeat: no-repeat; background-position: right 20px center; background-size: 24px;">
-          <option value="" disabled selected>Property Status</option>
-          <option value="Available">Available</option>
-          <option value="Rented">Rented</option>
-          <option value="Sold">Sold</option>
-          <option value="Pending">Pending</option>
-          <option value="Under Maintenance">Under Maintenance</option>
-        </select>
-        <input type="number" name="rooms_available[]" placeholder="Rooms Available" min="0" required>
+        <span class="feature-number">${featureCount}</span>
+        <div class="feature-inputs">
+          <input type="text" name="features[]" placeholder="Enter Room Type (e.g., One Bedroom)" required>
+          <div class="price-container">
+            <input type="number" name="prices[]" placeholder="Enter Price" required>
+            <select name="currency[]" required>
+              <option value="KES" selected>KES</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+          <select name="status[]" required style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\\'white\\' height=\\'28\\' viewBox=\\'0 0 24 24\\' width=\\'28\\' xmlns=\\'http://www.w3.org/2000/svg\\'><path d=\\'M7 10l5 5 5-5z\\' stroke=\\'rgba(0,0,0,0.2)\\' stroke-width=\\'1\\'></path><path d=\\'M0 0h24v24H0z\\' fill=\\'none\\'></path></svg>'); background-repeat: no-repeat; background-position: right 20px center; background-size: 24px;">
+            <option value="" disabled selected>Select Property Status</option>
+            <option value="Available">Available</option>
+            <option value="Rented">Rented</option>
+            <option value="Sold">Sold</option>
+            <option value="Pending">Pending</option>
+            <option value="Under Maintenance">Under Maintenance</option>
+          </select>
+          <input type="number" name="rooms_available[]" placeholder="Enter Number of Rooms Available" min="0" required>
+          <input type="text" name="room_size[]" placeholder="Enter Room Size (e.g., 50 sqm)" required>
+          <input type="text" name="floor[]" placeholder="Enter Floor (e.g., Ground, 1st)" required>
+          <input type="text" name="utilities[]" placeholder="Enter Utilities (e.g., water, Internet, electricity)" required>
+        </div>
+        <button type="button" class="upload-media-btn" title="Upload Media">📸
+          <input type="file" name="feature_media[]" accept="image/*,video/*" multiple>
+        </button>
         <button type="button" class="add-btn" onclick="addFeature()">➕</button>
         <button type="button" class="remove-btn" onclick="removeFeature(this)">➖</button>
       `;
       container.appendChild(div);
-      // Ensure the first feature item always has an add-btn
       const firstFeatureItem = document.querySelector('.feature-item:first-child');
       if (!firstFeatureItem.querySelector('.add-btn')) {
         const addBtn = document.createElement('button');
@@ -1085,13 +1172,13 @@
         addBtn.onclick = addFeature;
         firstFeatureItem.insertBefore(addBtn, firstFeatureItem.querySelector('.remove-btn'));
       }
+      updateFeatureNumbers();
     }
 
     function removeFeature(button) {
       const container = document.getElementById("features-container");
       if (container.children.length > 1) {
         button.parentElement.remove();
-        // Ensure the first feature item always has an add-btn
         const firstFeatureItem = document.querySelector('.feature-item:first-child');
         if (!firstFeatureItem.querySelector('.add-btn')) {
           const addBtn = document.createElement('button');
@@ -1101,12 +1188,24 @@
           addBtn.onclick = addFeature;
           firstFeatureItem.insertBefore(addBtn, firstFeatureItem.querySelector('.remove-btn'));
         }
+        updateFeatureNumbers();
       } else {
         alert("At least one feature item is required.");
       }
     }
 
+    function updateFeatureNumbers() {
+      const featureItems = document.querySelectorAll('.feature-item');
+      featureItems.forEach((item, index) => {
+        const numberSpan = item.querySelector('.feature-number');
+        if (numberSpan) {
+          numberSpan.textContent = index + 1;
+        }
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
+      updateFeatureNumbers();
       const fullscreenModal = document.createElement('div');
       fullscreenModal.classList.add('fullscreen-media-modal');
       fullscreenModal.innerHTML = `
@@ -1203,15 +1302,21 @@
       const profilePictureInput = document.getElementById('profile_picture_input');
       const profilePicturePreview = document.querySelector('.profile-picture');
 
-      if (profilePictureInput) {
+      if (profilePictureInput && profilePicturePreview) {
         profilePictureInput.addEventListener('change', function() {
           const file = this.files[0];
           if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-              profilePicturePreview.src = e.target.result;
+              profilePicturePreview.innerHTML = `<img src="${e.target.result}" alt="Profile Picture">`;
+              profilePicturePreview.classList.remove('no-image');
+              profilePicturePreview.classList.add('has-image');
             };
             reader.readAsDataURL(file);
+          } else {
+            profilePicturePreview.innerHTML = '';
+            profilePicturePreview.classList.remove('has-image');
+            profilePicturePreview.classList.add('no-image');
           }
         });
       }
@@ -1309,13 +1414,13 @@
         if (media) {
           media.addEventListener('click', () => {
             clearInterval(slideInterval);
-            const profilePicture = document.querySelector('.profile-picture').src;
+            const profilePicture = document.querySelector('.profile-picture img')?.src || '';
             const mediaList = [profilePicture, ...Array.from(slides).map(s => {
               const img = s.querySelector('img');
               const video = s.querySelector('video');
               return img ? img.src : video.querySelector('source').src;
-            })];
-            openFullscreenModal(mediaList, index + 1);
+            })].filter(Boolean);
+            openFullscreenModal(mediaList, index + (profilePicture ? 1 : 0));
           });
         }
       });
@@ -1324,11 +1429,12 @@
       if (profilePicture) {
         profilePicture.addEventListener('click', () => {
           clearInterval(slideInterval);
-          const mediaList = [profilePicture.src, ...Array.from(slides).map(s => {
+          const profilePictureSrc = document.querySelector('.profile-picture img')?.src || '';
+          const mediaList = [profilePictureSrc, ...Array.from(slides).map(s => {
             const img = s.querySelector('img');
             const video = s.querySelector('video');
             return img ? img.src : video.querySelector('source').src;
-          })];
+          })].filter(Boolean);
           openFullscreenModal(mediaList, 0);
         });
       }
@@ -1577,6 +1683,26 @@
           chatInput.focus();
         });
       });
+
+      document.querySelectorAll('input[name="feature_media[]"]').forEach(input => {
+        input.addEventListener('change', function() {
+          if (this.files.length > 0) {
+            const fileNames = Array.from(this.files).map(file => file.name).join(', ');
+            alert(`Selected media: ${fileNames}`);
+          }
+        });
+      });
+
+      // Initialize profile picture state
+      if (profilePicturePreview) {
+        if (profilePicturePreview.querySelector('img')) {
+          profilePicturePreview.classList.add('has-image');
+          profilePicturePreview.classList.remove('no-image');
+        } else {
+          profilePicturePreview.classList.add('no-image');
+          profilePicturePreview.classList.remove('has-image');
+        }
+      }
     });
   </script>
 </head>
@@ -1595,105 +1721,42 @@
       <span class="button-label">Logout</span>
     </div>
   </div>
-  <div class="container">
+  <div class="dashboard-content">
     <h1>Manager Dashboard</h1>
 
     {% if property and not edit_mode %}
-      <img src="{{ profile_picture }}" alt="Profile Picture" class="profile-picture">
+      <div class="profile-picture has-image">
+        <img src="{{ profile_picture }}" alt="Profile Picture">
+      </div>
       <div class="property-details">
         <h2>{{ property.name }}</h2>
-        <div class="property-detail-block">
-          <h4>Type</h4>
-          <p>{{ property.type }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Features</h4>
-          <ul>
-            {% for item in property.features %}
-              <li>{{ item.feature }} - {{ item.price }} Ksh ({{ item.status }}, {{ item.rooms_available | default('0') }} rooms)</li>
-            {% endfor %}
-          </ul>
-        </div>
-        <div class="property-detail-block">
-          <h4>Status</h4>
-          <p>{{ property.status }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Location</h4>
-          <p>{{ property.location }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Sub-county</h4>
-          <p>{{ property.sub_county }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Property Address</h4>
-          <p>{{ property.property_address }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Common Area Name</h4>
-          <p>{{ property.common_area_name }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Landmarks</h4>
-          <p>{{ property.landmarks }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Phone</h4>
-          <div class="input-with-copy">
-            <p>{{ property.phone }}</p>
-            <span class="copy-icon" title="Copy" onclick="copyText('phone')">📋</span>
-          </div>
-        </div>
-        <div class="property-detail-block">
-          <h4>Email</h4>
-          <div class="input-with-copy">
-            <p>{{ property.email }}</p>
-            <span class="copy-icon" title="Copy" onclick="copyText('email')">📋</span>
-          </div>
-        </div>
-        <div class="property-detail-block">
-          <h4>Amenities</h4>
-          <p>{{ property.amenities }}</p>
-        </div>
         {% if property.media %}
-          <div class="property-detail-block">
-            <h4>Media</h4>
-            <div class="slideshow-container">
-              {% for media in property.media %}
-                <div class="slide">
-                  {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
-                    <video controls muted loop>
-                      <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
-                      Your browser does not support the video tag.
-                    </video>
-                  {% else %}
-                    <img src="{{ media }}" alt="Property Media">
-                  {% endif %}
-                </div>
-              {% endfor %}
-              {% if property.media|length > 1 %}
-                <a class="prev">❮</a>
-                <a class="next">❯</a>
-              {% endif %}
-            </div>
-            {% if property.media|length > 1 %}
-              <div class="dots-container">
-                {% for media in property.media %}
-                  <span class="dot"></span>
-                {% endfor %}
+          <div class="slideshow-container">
+            {% for media in property.media %}
+              <div class="slide">
+                {% if media.endswith(('.mp4', '.webm', '.ogg')) %}
+                  <video controls muted loop>
+                    <source src="{{ media }}" type="video/{{ media.split('.')[-1] }}">
+                    Your browser does not support the video tag.
+                  </video>
+                {% else %}
+                  <img src="{{ media }}" alt="Property Media">
+                {% endif %}
               </div>
+            {% endfor %}
+            {% if property.media|length > 1 %}
+              <a class="prev">❮</a>
+              <a class="next">❯</a>
             {% endif %}
           </div>
+          {% if property.media|length > 1 %}
+            <div class="dots-container">
+              {% for media in property.media %}
+                <span class="dot"></span>
+              {% endfor %}
+            </div>
+          {% endif %}
         {% endif %}
-        <div class="property-detail-block">
-          <h4>Description</h4>
-          <p>{{ property.description }}</p>
-        </div>
-        <div class="property-detail-block">
-          <h4>Availability</h4>
-          <p>{{ property.availability }}</p>
-        </div>
         <button class="edit-btn" onclick="window.location.href='/edit_property/{{ property.id }}'">Edit Property Details</button>
         <button class="add-new-btn" onclick="window.location.href='/manager_dashboard'">Add New Property</button>
         <button class="action-btn" onclick="window.location.href='/view_bookings/{{ property.id }}'"><span class="btn-icon">📅</span>View Bookings</button>
@@ -1708,7 +1771,11 @@
         <button class="action-btn" onclick="window.location.href='/delete_profile/{{ property.id }}'"><span class="btn-icon">🗑️</span>Delete Profile</button>
       </div>
     {% else %}
-      <img src="{{ profile_picture | default('default-profile.png') }}" alt="Profile Picture" class="profile-picture">
+      <div class="profile-picture {{ 'has-image' if profile_picture else 'no-image' }}">
+        {% if profile_picture %}
+          <img src="{{ profile_picture }}" alt="Profile Picture">
+        {% endif %}
+      </div>
       <form action="{{ '/edit_property/' + property.id|string if edit_mode else '/add_property' }}" method="post" enctype="multipart/form-data">
         <div class="file-input-container profile-picture-container" data-label="Profile Picture">
           <input type="file" id="profile_picture_input" name="profile_picture" accept="image/*">
@@ -1729,34 +1796,64 @@
           {% if edit_mode and property.features %}
             {% for item in property.features %}
               <div class="feature-item">
-                <input type="text" name="features[]" placeholder="Feature (e.g., One Bedroom)" value="{{ item.feature }}" required>
-                <input type="number" name="prices[]" placeholder="Price (Ksh)" value="{{ item.price }}" required>
-                <select name="status[]" required>
-                  <option value="" disabled>Property Status</option>
-                  <option value="Available" {% if item.status == 'Available' %}selected{% endif %}>Available</option>
-                  <option value="Rented" {% if item.status == 'Rented' %}selected{% endif %}>Rented</option>
-                  <option value="Sold" {% if item.status == 'Sold' %}selected{% endif %}>Sold</option>
-                  <option value="Pending" {% if item.status == 'Pending' %}selected{% endif %}>Pending</option>
-                  <option value="Under Maintenance" {% if item.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
-                </select>
-                <input type="number" name="rooms_available[]" placeholder="Rooms Available" value="{{ item.rooms_available if item.rooms_available is defined else '' }}" min="0" required>
+                <span class="feature-number">1</span>
+                <div class="feature-inputs">
+                  <input type="text" name="features[]" placeholder="Room Type (e.g., One Bedroom, Studio)" value="{{ item.feature }}" required>
+                  <div class="price-container">
+                    <input type="number" name="prices[]" placeholder="Price" value="{{ item.price }}" required>
+                    <select name="currency[]" required>
+                      <option value="KES" {% if item.currency == 'KES' %}selected{% endif %}>KES</option>
+                      <option value="USD" {% if item.currency == 'USD' %}selected{% endif %}>USD</option>
+                    </select>
+                  </div>
+                  <select name="status[]" required>
+                    <option value="" disabled>Select Room Status</option>
+                    <option value="Available" {% if item.status == 'Available' %}selected{% endif %}>Available</option>
+                    <option value="Rented" {% if item.status == 'Rented' %}selected{% endif %}>Rented</option>
+                    <option value="Sold" {% if item.status == 'Sold' %}selected{% endif %}>Sold</option>
+                    <option value="Pending" {% if item.status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Under Maintenance" {% if item.status == 'Under Maintenance' %}selected{% endif %}>Under Maintenance</option>
+                  </select>
+                  <input type="number" name="rooms_available[]" placeholder="Number of Rooms Available (e.g., 5)" value="{{ item.rooms_available if item.rooms_available is defined else '' }}" min="0" required>
+                  <input type="text" name="room_size[]" placeholder="Room Size (e.g., 50 sqm)" value="{{ item.room_size if item.room_size is defined else '' }}" required>
+                  <input type="text" name="floor[]" placeholder="Floor (e.g., Ground, 1st)" value="{{ item.floor if item.floor is defined else '' }}" required>
+                  <input type="text" name="utilities[]" placeholder="Utilities (e.g., Water, Internet, Electricity)" value="{{ item.utilities if item.utilities is defined else '' }}" required>
+                </div>
+                <button type="button" class="upload-media-btn" title="Upload Media">📸
+                  <input type="file" name="feature_media[]" accept="image/*,video/*" multiple>
+                </button>
                 <button type="button" class="add-btn" onclick="addFeature()">➕</button>
                 <button type="button" class="remove-btn" onclick="removeFeature(this)">➖</button>
               </div>
             {% endfor %}
           {% else %}
             <div class="feature-item">
-              <input type="text" name="features[]" placeholder="Room Type (e.g., One Bedroom)" required>
-              <input type="number" name="prices[]" placeholder="Price (Ksh)" required>
-              <select name="status[]" required>
-                <option value="" disabled selected>Property Status</option>
-                <option value="Available">Available</option>
-                <option value="Rented">Rented</option>
-                <option value="Sold">Sold</option>
-                <option value="Pending">Pending</option>
-                <option value="Under Maintenance">Under Maintenance</option>
-              </select>
-              <input type="number" name="rooms_available[]" placeholder="Rooms Available" min="0" required>
+              <span class="feature-number">1</span>
+              <div class="feature-inputs">
+                <input type="text" name="features[]" placeholder="Room Type (e.g., One Bedroom, Studio)" required>
+                <div class="price-container">
+                  <input type="number" name="prices[]" placeholder="Price" required>
+                  <select name="currency[]" required>
+                    <option value="KES" selected>KES</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+                <select name="status[]" required>
+                  <option value="" disabled selected>Select Room Status</option>
+                  <option value="Available">Available</option>
+                  <option value="Rented">Rented</option>
+                  <option value="Sold">Sold</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Under Maintenance">Under Maintenance</option>
+                </select>
+                <input type="number" name="rooms_available[]" placeholder="Number of Rooms Available (e.g., 5)" min="0" required>
+                <input type="text" name="room_size[]" placeholder="Room Size (e.g., 50 sqm)" required>
+                <input type="text" name="floor[]" placeholder="Floor (e.g., Ground, 1st)" required>
+                <input type="text" name="utilities[]" placeholder="Utilities (e.g., Water, Internet, Electricity)" required>
+              </div>
+              <button type="button" class="upload-media-btn" title="Upload Media">📸
+                <input type="file" name="feature_media[]" accept="image/*,video/*" multiple>
+              </button>
               <button type="button" class="add-btn" onclick="addFeature()">➕</button>
               <button type="button" class="remove-btn" onclick="removeFeature(this)">➖</button>
             </div>
@@ -1782,7 +1879,7 @@
         <input type="text" id="sub_county" name="sub_county" placeholder="Enter Sub-county" value="{{ property.sub_county if edit_mode else '' }}" required>
         <label for="property_address">Property Address</label>
         <input type="text" id="property_address" name="property_address" placeholder="Enter Property Address" value="{{ property.property_address if edit_mode else '' }}" required>
-        <label for="common_area_name">Common Area Name</label>
+        <label for="common_area_name">Common Area Name / Neighborhood</label>
         <input type="text" id="common_area_name" name="common_area_name" placeholder="Enter Common Area Name / Nickname" value="{{ property.common_area_name if edit_mode else '' }}" required>
         <label for="landmarks">Nearby Landmarks</label>
         <input type="text" id="landmarks" name="landmarks" placeholder="Enter Nearby Landmarks" value="{{ property.landmarks if edit_mode else '' }}" required>
@@ -1797,7 +1894,7 @@
           <span class="copy-icon" title="Copy" onclick="copyText('email')">📋</span>
         </div>
         <label for="amenities">Property Amenities</label>
-        <input type="text" id="amenities" name="amenities" placeholder="Amenities (e.g., gym, pool, parking)" value="{{ property.amenities if edit_mode else '' }}" required>
+        <input type="text" id="amenities" name="amenities" placeholder="Enter Amenities (e.g., gym, pool, parking)" value="{{ property.amenities if edit_mode else '' }}" required>
         <div class="file-input-container media-container" data-label="Property Photos & Videos">
           <input type="file" name="media[]" accept="image/*,video/*" multiple>
         </div>

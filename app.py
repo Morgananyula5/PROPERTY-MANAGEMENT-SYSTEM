@@ -244,6 +244,11 @@ def add_property():
         features = request.form.getlist('features[]')
         prices = request.form.getlist('prices[]')
         occupancy_status = request.form.getlist('status[]')
+        rooms_available = request.form.getlist('rooms_available[]')
+        room_size = request.form.getlist('room_size[]')
+        floor = request.form.getlist('floor[]')
+        utilities = request.form.getlist('utilities[]')
+        currency = request.form.getlist('currency[]')
 
         if not all([name, property_type, status, phone, email, description, location, sub_county, landmarks, property_address, availability, amenities, common_area_name]):
             flash("All fields are required.", "danger")
@@ -283,7 +288,22 @@ def add_property():
         else:
             flash("No media files uploaded", "warning")
 
-        feature_price_status = [{"feature": f, "price": p, "status": s} for f, p, s in zip(features, prices, occupancy_status)]
+        # Include new fields in the feature JSON
+        feature_price_status = [
+            {
+                "feature": f,
+                "price": p,
+                "status": s,
+                "rooms_available": ra,
+                "room_size": rs,
+                "floor": fl,
+                "utilities": u,
+                "currency": c
+            }
+            for f, p, s, ra, rs, fl, u, c in zip(
+                features, prices, occupancy_status, rooms_available, room_size, floor, utilities, currency
+            )
+        ]
         features_json = json.dumps(feature_price_status)
 
         combined_description = f"{description}\nProperty Address: {property_address}\nAmenities: {amenities}"
@@ -349,6 +369,11 @@ def edit_property(property_id):
             features = request.form.getlist('features[]')
             prices = request.form.getlist('prices[]')
             occupancy_status = request.form.getlist('status[]')
+            rooms_available = request.form.getlist('rooms_available[]')
+            room_size = request.form.getlist('room_size[]')
+            floor = request.form.getlist('floor[]')
+            utilities = request.form.getlist('utilities[]')
+            currency = request.form.getlist('currency[]')
 
             if not all([name, property_type, status, phone, email, description, location, sub_county, landmarks, property_address, availability, amenities, common_area_name]):
                 flash("All fields are required.", "danger")
@@ -394,7 +419,22 @@ def edit_property(property_id):
             else:
                 media_paths = existing_media
 
-            feature_price_status = [{"feature": f, "price": p, "status": s} for f, p, s in zip(features, prices, occupancy_status)]
+            # Include new fields in the feature JSON
+            feature_price_status = [
+                {
+                    "feature": f,
+                    "price": p,
+                    "status": s,
+                    "rooms_available": ra,
+                    "room_size": rs,
+                    "floor": fl,
+                    "utilities": u,
+                    "currency": c
+                }
+                for f, p, s, ra, rs, fl, u, c in zip(
+                    features, prices, occupancy_status, rooms_available, room_size, floor, utilities, currency
+                )
+            ]
             features_json = json.dumps(feature_price_status)
 
             combined_description = f"{description}\nProperty Address: {property_address}\nAmenities: {amenities}"
